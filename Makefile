@@ -19,6 +19,7 @@ up: #[Docker] Start containers
 	touch .docker/.env
 	make src/vendor
 	$(DOCKER_COMPOSE) up --remove-orphans
+
 stop: #[Docker] Down containers
 	$(DOCKER_COMPOSE) stop
 
@@ -33,15 +34,6 @@ ps: # [Docker] Show running containers
 
 bash: #[Docker] Connect to php container with current host user
 	$(DOCKER_COMPOSE) exec -u $$(id -u $${USER}):$$(id -g $${USER}) php bash
-
-supervisorctl/start: #[Supervisor] Start consumers (see .docker/php/supervisor/process_ui.conf)
-	$(DOCKER_COMPOSE) exec -u root:root php supervisorctl start all
-
-supervisorctl/stop: #[Supervisor] Stop consumers (see .docker/php/supervisor/process_ui.conf)
-	$(DOCKER_COMPOSE) exec -u root:root php supervisorctl stop all
-
-supervisorctl/status: #[Supervisor] Show consumers status (see .docker/php/supervisor/process_ui.conf)
-	$(DOCKER_COMPOSE) exec -u root:root php supervisorctl status
 
 logs: #[Docker] Show logs
 	$(DOCKER_COMPOSE) logs -f

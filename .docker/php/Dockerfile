@@ -1,8 +1,6 @@
 ARG PHP_VERSION=8.2
 FROM php:${PHP_VERSION}-fpm AS php
 ARG XDEBUG_VERSION=3.1.4
-ARG DOCKER_HTTP_PORT=8000
-ENV DOCKER_HTTP_PORT=${DOCKER_HTTP_PORT}
 
 # Set user and group
 ARG UID=1000
@@ -23,7 +21,6 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     gosu \
     symfony-cli \
-    supervisor \
     procps \
     && docker-php-ext-configure intl \
     && install-php-extensions \
@@ -46,4 +43,4 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
-CMD service supervisor start;symfony server:stop --all;symfony server:ca:install;symfony serve --port=${DOCKER_HTTP_PORT};
+CMD ["php-fpm"]
