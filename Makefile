@@ -50,3 +50,19 @@ xdebug/on: #[Docker] Enable xdebug
 xdebug/off: #[Docker] Disable xdebug
 	$(DOCKER_COMPOSE) stop php
 	XDEBUG_MODE=off $(DOCKER_COMPOSE) up --remove-orphans --detach
+
+quality: phpstan php-cs-fixer rector #[Quality] Run all quality checks
+
+phpstan: #[Quality] Run PHPStan
+	$(DOCKER_RUN_PHP) "vendor/bin/phpstan --no-progress --memory-limit=1G analyse"
+
+php-cs-fixer: #[Quality] Run PHP-CS-Fixer
+	$(DOCKER_RUN_PHP) "vendor/bin/php-cs-fixer fix --diff --verbose"
+
+rector: #[Quality] Run Rector
+	$(DOCKER_RUN_PHP) "vendor/bin/rector"
+
+tests: phpunit #[Tests] Run all tests
+
+phpunit: #[Tests] Run PHPUnit
+	$(DOCKER_RUN_PHP) "vendor/bin/phpunit"
