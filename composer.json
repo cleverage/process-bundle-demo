@@ -8,9 +8,9 @@
         }
     },
     "require": {
-        "cleverage/doctrine-process-bundle": "v2.0-RC1",
-        "cleverage/process-bundle": "dev-v4-dev",
-        "cleverage/process-ui-bundle": "dev-v2-dev",
+        "cleverage/doctrine-process-bundle": "dev-prepare-release",
+        "cleverage/process-bundle": "dev-prepare-release",
+        "cleverage/ui-process-bundle": "dev-prepare-release",
         "symfony/flex": "^v2.3"
     },
     "require-dev": {
@@ -33,6 +33,17 @@
             "symfony/flex": true,
             "symfony/runtime": true
         },
-        "sort-packages": true
-    }
+        "sort-packages": true,
+        "preferred-install": {
+            "cleverage/*": "source",
+            "*": "dist"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cleverage/ui-process-bundle.git"
+        }
+    ],
+    "minimum-stability": "dev"
 }

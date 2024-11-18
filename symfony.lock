@@ -1,12 +1,12 @@
 {
     "cleverage/doctrine-process-bundle": {
-        "version": "dev-v2-dev"
+        "version": "dev-prepare-release"
     },
     "cleverage/process-bundle": {
-        "version": "dev-v4-dev"
+        "version": "dev-prepare-release"
     },
-    "cleverage/process-ui-bundle": {
-        "version": "dev-v2-dev"
+    "cleverage/ui-process-bundle": {
+        "version": "dev-prepare-release"
     },
     "doctrine/doctrine-bundle": {
         "version": "2.10",
@@ -67,6 +67,18 @@
         "files": [
             "config/packages/flysystem.yaml",
             "var/storage/.gitignore"
+        ]
+    },
+    "php-cs-fixer/shim": {
+        "version": "3.64",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "16422bf8eac6c3be42afe07d37e2abc89d2bdf6b"
+        },
+        "files": [
+            ".php-cs-fixer.dist.php"
         ]
     },
     "phpstan/phpstan": {
