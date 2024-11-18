@@ -1,11 +1,10 @@
 .ONESHELL:
 SHELL := /bin/bash
 
-DOCKER_RUN_PHP = docker compose -f .docker/docker-compose.yml -f .docker/docker-compose.override.yml run --rm php "bash" "-c"
-DOCKER_COMPOSE = docker compose -f .docker/docker-compose.yml -f .docker/docker-compose.override.yml
+DOCKER_RUN_PHP = docker compose -f .docker/compose.yaml run --rm php "bash" "-c"
+DOCKER_COMPOSE = docker compose -f .docker/compose.yaml
 
-
-start: upd doctrine/migrations assets/install #[Global] Start application (but not consumers, use supervisorctl/start)
+start: upd doctrine/migrations assets/install #[Global] Start application
 
 src/vendor: #[Composer] install dependencies
 	$(DOCKER_RUN_PHP) "composer install --no-interaction"
@@ -43,9 +42,6 @@ doctrine/migrations: #[Symfony] Run database migration
 
 assets/install: #[Symfony] Install assets
 	$(DOCKER_RUN_PHP) "bin/console assets:install"
-
-cache/clean: #[Symfony] Clean cache
-	$(DOCKER_RUN_PHP) "bin/console c:c"
 
 xdebug/on: #[Docker] Enable xdebug
 	$(DOCKER_COMPOSE) stop php
