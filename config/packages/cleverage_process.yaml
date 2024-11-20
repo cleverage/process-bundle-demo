@@ -1,7 +1,7 @@
 imports:
     - { resource: process/ }
 
-cleverage_ui_process:
+clever_age_ui_process:
     logs:
         report_increment_level: Info # all logs higher are equal than Info were added to ProcessExecution report
 
