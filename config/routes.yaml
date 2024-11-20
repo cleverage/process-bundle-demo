@@ -1,5 +1,5 @@
-process-bundle-ui:
-    resource: '@CleverAgeProcessUiBundle/src/Controller'
+ui-process-bundle:
+    resource: '@CleverAgeUiProcessBundle/src/Controller'
     type: attribute
 
 controllers:

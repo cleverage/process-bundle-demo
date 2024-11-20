@@ -1,10 +1,9 @@
 imports:
     - { resource: process/ }
 
-clever_age_process_ui:
-# Deprecated, @TODO Fix it
-#    logs:
-#        report_increment_level: Info # all logs higher are equal than Info were added to ProcessExecution report
+clever_age_ui_process:
+    logs:
+        report_increment_level: Info # all logs higher are equal than Info were added to ProcessExecution report
 
 clever_age_process:
     default_error_strategy: stop
