@@ -14,6 +14,7 @@
         "symfony/flex": "^v2.3"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.6",
         "friendsofphp/php-cs-fixer": "*",
         "phpstan/extension-installer": "*",
         "phpstan/phpstan": "*",
@@ -22,11 +23,10 @@
         "phpunit/phpunit": "<10.0",
         "rector/rector": "*",
         "roave/security-advisories": "dev-latest",
-        "symfony/browser-kit": "7.2.x-dev",
-        "symfony/css-selector": "7.2.x-dev",
+        "symfony/browser-kit": "^6.4|^7.1",
+        "symfony/css-selector": "^6.4|^7.1",
         "symfony/debug-bundle": "^6.4|^7.1",
-        "symfony/maker-bundle": "^1.51",
-        "symfony/stopwatch": "^6.4|^7.1",
+        "symfony/maker-bundle": "^1.31",
         "symfony/web-profiler-bundle": "^6.4|^7.1"
     },
     "scripts": {
@@ -53,5 +53,6 @@
             "url": "https://github.com/cleverage/ui-process-bundle.git"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

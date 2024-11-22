@@ -3,8 +3,6 @@ parameters:
     paths:
         - src
         - tests
-    excludePaths:
-        - src/DependencyInjection/Configuration.php
     ignoreErrors:
         - '#type has no value type specified in iterable type#'
         - '#has parameter .* with no value type specified in iterable type#'
@@ -14,7 +12,6 @@ parameters:
         - '#process\(\) has no return type specified#'
         - '#should return Iterator but returns Traversable#'
         - '#Negated boolean expression is always false#'
-    checkGenericClassInNonGenericObjectType: false
     reportUnmatchedIgnoredErrors: false
     inferPrivatePropertyTypeFromConstructor: true
     treatPhpDocTypesAsCertain: false
