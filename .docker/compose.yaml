@@ -40,7 +40,7 @@ x-base-mysql: &base-mysql
       MYSQL_VERSION: ${MYSQL_VERSION:-9.1.0}
   env_file: .env
   volumes:
-    - ./mysql/data:/var/lib/mysql
+    - process_bundle_demo_data:/var/lib/mysql
   environment:
     MYSQL_ROOT_PASSWORD: root
     MYSQL_DATABASE: app
@@ -53,6 +53,9 @@ services:
   php:
     <<: *base-php
     tty: true
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   apache2:
     <<: *base-apache2
@@ -63,5 +66,11 @@ services:
   mysql:
     <<: *base-mysql
     tty: true
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 5s
+      retries: 100
     ports:
       - "${MYSQL_PORT:-3306}:3306"
+volumes:
+  process_bundle_demo_data:
