@@ -33,3 +33,17 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # For cleverage/soap-process-bundle
+    app.cleverage_soap_process.client.oorsprong_countryinfo:
+        class: CleverAge\SoapProcessBundle\Client\Client
+        bind:
+            $code: 'oorsprong_countryinfo'
+            $wsdl: 'http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL'
+            $options:
+                trace: true
+                exceptions: true
+        calls:
+            - [ setSoapOptions, [ { features: SOAP_SINGLE_ELEMENT_ARRAYS} ] ]
+        tags:
+            - { name: cleverage.soap.client }
