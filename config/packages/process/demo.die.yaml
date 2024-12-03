@@ -1,6 +1,8 @@
 clever_age_process:
     configurations:
         demo.die:
+            description: >
+                Ex: bin/console cleverage:process:execute demo.die
             options:
                 ui:
                     source: Bar

@@ -1,6 +1,8 @@
 clever_age_process:
     configurations:
         demo.logger:
+            description: >
+                Ex: bin/console cleverage:process:execute demo.logger
             options:
                 ui:
                     source: Bar

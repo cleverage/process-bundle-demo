@@ -1,6 +1,8 @@
 clever_age_process:
     configurations:
         demo.sample:
+            description: >
+                Ex: bin/console cleverage:process:execute demo.sample
             options:
                 ui:
                     source: Bar
