@@ -1,0 +1,17 @@
+clever_age_process:
+    configurations:
+        demo.event_dispatcher:
+            description: >
+                Ex: bin/console cleverage:process:execute demo.event_dispatcher
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\Event\EventDispatcherTask'
+                    options:
+                        event_name: 'myapp.myevent'
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

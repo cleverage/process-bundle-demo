@@ -1,0 +1,31 @@
+clever_age_process:
+    configurations:
+        demo.counter:
+            description: >
+                Ex: bin/console cleverage:process:execute demo.counter
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            test1: test1
+                            test2: test2
+                            test3: test3
+                            test4: test4
+                            test5: test5
+                            test6: test6
+                            test7: test7
+                            test8: test8
+                            test9: test9
+                    outputs: [ counter ]
+                counter:
+                    service: '@CleverAge\ProcessBundle\Task\CounterTask'
+                    options:
+                        flush_every: 3
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
