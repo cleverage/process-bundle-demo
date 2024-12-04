@@ -1,7 +1,7 @@
 clever_age_process:
     configurations:
         demo.rest:
-            description: >
+            help: >
                 Ex: bin/console cleverage:process:execute demo.rest -c codePostal:"'46800'"
             options:
                 ui:
