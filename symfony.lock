@@ -5,6 +5,9 @@
     "cleverage/process-bundle": {
         "version": "dev-prepare-release"
     },
+    "cleverage/rest-process-bundle": {
+        "version": "dev-prepare-release"
+    },
     "cleverage/ui-process-bundle": {
         "version": "dev-prepare-release"
     },

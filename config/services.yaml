@@ -33,3 +33,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # For cleverage/rest-process-bundle
+    app.cleverage_rest_process.client.apicarto_ign:
+        class: CleverAge\RestProcessBundle\Client\Client
+        bind:
+            $code: 'apicarto_ign'
+            $uri: 'https://apicarto.ign.fr/api'
+        tags:
+            - { name: cleverage.rest.client }
