@@ -1,7 +1,7 @@
 clever_age_process:
     configurations:
         demo.upload_and_run:
-            description: >
+            help: >
                 Ex: bin/console cleverage:process:execute demo.upload_and_run --input=/path/to/file.csv -c delimiter:;
             entry_point: entrypoint # for upload_and_run process entry_point is required
             options:

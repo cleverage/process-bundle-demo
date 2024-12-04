@@ -1,7 +1,7 @@
 clever_age_process:
     configurations:
         demo.sample:
-            description: >
+            help: >
                 Ex: bin/console cleverage:process:execute demo.sample
             options:
                 ui:
