@@ -1,6 +1,8 @@
 clever_age_process:
     configurations:
         demo.debug:
+            description: >
+                A simple process which output as debug
             help: >
                 Ex: bin/console cleverage:process:execute demo.debug
             options:

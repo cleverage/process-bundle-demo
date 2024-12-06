@@ -2,6 +2,8 @@ clever_age_process:
     configurations:
         demo.dummy:
             description: >
+                A simple process with multiple output
+            help: >
                 Ex: bin/console cleverage:process:execute demo.dummy
             options:
                 ui:

@@ -2,6 +2,8 @@ clever_age_process:
     configurations:
         demo.constant_output:
             description: >
+                A simple process which output a constant data
+            help: >
                 Ex: bin/console cleverage:process:execute demo.constant_output
             options:
                 ui:

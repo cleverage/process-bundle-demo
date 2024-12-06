@@ -2,6 +2,8 @@ clever_age_process:
     configurations:
         demo.counter:
             description: >
+                A simple process which count the number of times the task is processed and continue every 3 iterations
+            help: >
                 Ex: bin/console cleverage:process:execute demo.counter
             options:
                 ui:

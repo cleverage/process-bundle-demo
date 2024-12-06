@@ -2,6 +2,8 @@ clever_age_process:
     configurations:
         demo.error_forwarder:
             description: >
+                A simple process which forward data to an error output
+            help: >
                 Ex: bin/console cleverage:process:execute demo.error_forwarder
             options:
                 ui:

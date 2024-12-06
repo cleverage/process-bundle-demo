@@ -4,7 +4,7 @@ clever_age_process:
             description: >
                 A simple process to use SoapProcessBundle
             help: >
-                bin/console cleverage:process:execute demo.soap
+                Ex: bin/console cleverage:process:execute demo.soap
             options:
                 ui:
                     source: Bar
