@@ -47,3 +47,12 @@ services:
             - [ setSoapOptions, [ { features: SOAP_SINGLE_ELEMENT_ARRAYS} ] ]
         tags:
             - { name: cleverage.soap.client }
+
+    # For cleverage/rest-process-bundle
+    app.cleverage_rest_process.client.apicarto_ign:
+        class: CleverAge\RestProcessBundle\Client\Client
+        bind:
+            $code: 'apicarto_ign'
+            $uri: 'https://apicarto.ign.fr/api'
+        tags:
+            - { name: cleverage.rest.client }

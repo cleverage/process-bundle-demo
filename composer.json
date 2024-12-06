@@ -11,6 +11,7 @@
         "cleverage/doctrine-process-bundle": "dev-prepare-release",
         "cleverage/process-bundle": "dev-prepare-release",
         "cleverage/soap-process-bundle": "dev-prepare-release",
+        "cleverage/rest-process-bundle": "dev-prepare-release",
         "cleverage/ui-process-bundle": "dev-prepare-release",
         "symfony/flex": "^v2.3"
     },
