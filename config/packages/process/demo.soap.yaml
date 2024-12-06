@@ -1,0 +1,62 @@
+clever_age_process:
+    configurations:
+        demo.soap:
+            description: >
+                A simple process to use SoapProcessBundle
+            help: >
+                bin/console cleverage:process:execute demo.soap
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\SoapProcessBundle\Task\RequestTask'
+                    error_strategy: 'stop'
+                    options:
+                        client: oorsprong_countryinfo
+                        method: 'FullCountryInfoAllCountries'
+                    outputs: [filter_europe]
+                filter_europe:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            property_accessor:
+                                property_path: 'FullCountryInfoAllCountriesResult.tCountryInfo'
+                            array_filter:
+                                condition:
+                                    match:
+                                        sContinentCode: 'EU'
+                    outputs: [phone_code, iso_code]
+                phone_code:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            array_map:
+                                transformers:
+                                    cast: # Convert stdClass to array
+                                        type: 'array'
+                                    mapping:
+                                        mapping:
+                                            phoneCode:
+                                                code: '[sPhoneCode]'
+                                            flag:
+                                                code: '[sCountryFlag]'
+                    outputs: [debug]
+                iso_code:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            array_map:
+                                transformers:
+                                    cast: # Convert stdClass to array
+                                        type: 'array'
+                                    mapping:
+                                        mapping:
+                                            isoCode:
+                                                code: '[sISOCode]'
+                                            name:
+                                                code: '[sName]'
+                    outputs: [debug]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
