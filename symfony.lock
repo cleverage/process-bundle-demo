@@ -174,7 +174,8 @@
             "ref": "7d86a6723f4a623f59e2bf966b6aad2fc461d36b"
         },
         "files": [
-            "config/packages/csrf.yaml"
+            "config/packages/csrf.yaml",
+            ".env.dev"
         ]
     },
     "symfony/framework-bundle": {
