@@ -1,0 +1,45 @@
+clever_age_process:
+    configurations:
+        demo.sftp_copy:
+            description: >
+                A sample process to copy files between flysystem storages.
+                source_filesystem context variable is used to define source filesystem.
+                destination_filesystem context variable is used to define destination filesystem.
+                file_pattern context variable is used to define file_pattern to match.
+                Following help show us how to delete all .csv files from filesystem remote.storage to local.storage
+                See config/packages/flysystem.yaml to see configured flysystem/storages.
+            help: >
+                bin/console cleverage:process:execute demo.sftp_copy -c source_filesystem:remote.storage -c destination_filesystem:local.storage -c file_pattern:/.csv$/ -vv
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                copy:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    description: >
+                        Download .csv files from remote.storage to local.storage.
+                    outputs: aggregate
+                    options:
+                        source_filesystem: '{{ source_filesystem }}'
+                        destination_filesystem: '{{ destination_filesystem }}'
+                        file_pattern: '{{ file_pattern }}'
+                        remove_source: true
+                aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    description: >
+                        Aggregate files previously downloaded. Then when all files are downloaded pass to read_local_dir
+                        task to read each files one by one.
+                    outputs: read_local_dir
+                read_local_dir:
+                    service: '@CleverAge\ProcessBundle\Task\File\FolderBrowserTask'
+                    outputs: log_local_file
+                    options:
+                        folder_path: '%local.storage.dir%'
+                log_local_file:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Read file.
+                        level: info
+
+

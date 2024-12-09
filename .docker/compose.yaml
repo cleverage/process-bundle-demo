@@ -72,5 +72,13 @@ services:
       retries: 100
     ports:
       - "${MYSQL_PORT:-3306}:3306"
+  sftp:
+    image: atmoz/sftp
+    volumes:
+      - ./sftp:/home/sftp/
+    ports:
+      - "22:22"
+    command: sftp:password:1000
+
 volumes:
   process_bundle_demo_data:

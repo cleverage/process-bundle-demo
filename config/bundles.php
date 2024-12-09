@@ -17,4 +17,6 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     CleverAge\SoapProcessBundle\CleverAgeSoapProcessBundle::class => ['all' => true],
     CleverAge\RestProcessBundle\CleverAgeRestProcessBundle::class => ['all' => true],
+    CleverAge\FlysystemProcessBundle\CleverAgeFlysystemProcessBundle::class => ['all' => true],
+    \League\FlysystemBundle\FlysystemBundle::class => ['all' => true]
 ];

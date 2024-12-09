@@ -1,0 +1,17 @@
+parameters:
+  local.storage.dir: '%kernel.project_dir%/var/storage/local'
+flysystem:
+  storages:
+    local.storage:
+      adapter: 'local'
+      options:
+        directory: '%local.storage.dir%'
+
+    remote.storage:
+      adapter: 'sftp'
+      options:
+        host: '%env(string:SFTP_HOST)%'
+        port: '%env(int:SFTP_PORT)%'
+        username: '%env(string:SFTP_USERNAME)%'
+        password: '%env(string:SFTP_PASSWORD)%'
+        root: '%env(string:SFTP_ROOT)%'
