@@ -5,10 +5,10 @@
     "cleverage/process-bundle": {
         "version": "dev-prepare-release"
     },
-    "cleverage/soap-process-bundle": {
+    "cleverage/rest-process-bundle": {
         "version": "dev-prepare-release"
     },
-    "cleverage/rest-process-bundle": {
+    "cleverage/soap-process-bundle": {
         "version": "dev-prepare-release"
     },
     "cleverage/ui-process-bundle": {
@@ -274,6 +274,18 @@
         },
         "files": [
             "config/packages/uid.yaml"
+        ]
+    },
+    "symfony/ux-twig-component": {
+        "version": "2.22",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.13",
+            "ref": "67814b5f9794798b885cec9d3f48631424449a01"
+        },
+        "files": [
+            "config/packages/twig_component.yaml"
         ]
     },
     "symfony/validator": {
