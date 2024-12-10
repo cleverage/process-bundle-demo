@@ -1,6 +1,10 @@
 clever_age_process:
     configurations:
-        demo.doctrine.update:
+        demo.doctrine.database.update:
+            description: >
+                A simple process to use DoctrineProcessBundle as database updater
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.database.update
             options:
                 ui:
                     source: Bar
