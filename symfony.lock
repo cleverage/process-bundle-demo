@@ -2,6 +2,9 @@
     "cleverage/doctrine-process-bundle": {
         "version": "dev-prepare-release"
     },
+    "cleverage/flysystem-process-bundle": {
+        "version": "dev-prepare-release"
+    },
     "cleverage/process-bundle": {
         "version": "dev-prepare-release"
     },
