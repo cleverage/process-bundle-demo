@@ -13,7 +13,7 @@ clever_age_process:
                 entry:
                     service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseReaderTask'
                     options:
-                        table: 'process_user'
+                        table: 'book'
                     outputs: [debug]
 
                 debug:

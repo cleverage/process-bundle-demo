@@ -4,7 +4,7 @@ clever_age_process:
             description: >
                 A simple process to use DoctrineProcessBundle as database updater
             help: >
-                Ex: bin/console cleverage:process:execute demo.doctrine.database.update
+                Ex: bin/console cleverage:process:execute demo.doctrine.database.update -c firstname:Paul -c lastname:Durant
             options:
                 ui:
                     source: Bar
@@ -13,14 +13,14 @@ clever_age_process:
                     default:
                         context:
                             -   key: firstname
-                                value: Paul
+                                value: Steven
                             -   key: lastname
-                                value: Durand
+                                value: King
             tasks:
                 entry:
                     service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseUpdaterTask'
                     options:
-                        sql: 'update process_user set firstname = :firstname, lastname = :lastname'
+                        sql: 'update author set firstname = :firstname, lastname = :lastname'
                         input_as_params: false
                         params:
                             firstname: '{{ firstname }}'
