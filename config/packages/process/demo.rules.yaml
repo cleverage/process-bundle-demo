@@ -1,0 +1,59 @@
+clever_age_process:
+    configurations:
+        demo.rules:
+            description: >
+                A simple process which use RulesTransformer
+            help: >
+                Ex: bin/console cleverage:process:execute demo.rules
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - order:
+                                  origin: marketplace
+                              customer:
+                                  id: 123
+                            - order:
+                                  origin: e-commerce
+                            - order:
+                                  origin: other
+                    outputs: [ transform_value, transform_variable ]
+                transform_value:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            rules:
+                                rules_set:
+                                    - condition: 'value["order"]["origin"] === "marketplace"'
+                                      transformers:
+                                          property_accessor:
+                                              property_path: '[customer][id]'
+                                    - condition: 'value["order"]["origin"] === "e-commerce"'
+                                      constant: value1234
+                                    - default: true
+                                      set_null: true
+                    outputs: [ debug ]
+                transform_variable:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            rules:
+                                use_value_as_variables: true
+                                expression_variables: [ order, customer ]
+                                rules_set:
+                                    - condition: 'order["origin"] === "marketplace"'
+                                      transformers:
+                                          property_accessor:
+                                              property_path: '[customer][id]'
+                                    - condition: 'order["origin"] === "e-commerce"'
+                                      constant: variable1234
+                                    - default: true
+                                      set_null: true
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
