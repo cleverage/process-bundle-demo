@@ -1,10 +1,10 @@
 clever_age_process:
     configurations:
-        demo.debug:
+        demo.constant_output:
             description: >
-                A simple process which output as debug
+                A simple process which output a constant data
             help: >
-                Ex: bin/console cleverage:process:execute demo.debug
+                Ex: bin/console cleverage:process:execute demo.constant_output
             options:
                 ui:
                     source: Bar
@@ -17,7 +17,6 @@ clever_age_process:
                             id: 123
                             firstname: Test1
                             lastname: Test2
-                    outputs: [debug]
-
+                    outputs: [ debug ]
                 debug:
                     service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

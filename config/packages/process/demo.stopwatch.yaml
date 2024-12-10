@@ -1,0 +1,14 @@
+clever_age_process:
+    configurations:
+        demo.stopwatch:
+            description: >
+                A simple process which output as stopwatch
+            help: >
+                Ex: bin/console cleverage:process:execute demo.stopwatch
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\StopwatchTask'

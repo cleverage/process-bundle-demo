@@ -1,6 +1,10 @@
 clever_age_process:
     configurations:
         demo.doctrine.read:
+            description: >
+                A simple process to use DoctrineProcessBundle as database reader
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.read
             options:
                 ui:
                     source: Bar

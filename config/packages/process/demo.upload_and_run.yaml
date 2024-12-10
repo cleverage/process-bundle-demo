@@ -1,6 +1,10 @@
 clever_age_process:
     configurations:
         demo.upload_and_run:
+            description: >
+                A simple process which upload a csv file and read it to log/debug each line
+            help: >
+                Ex: bin/console cleverage:process:execute demo.upload_and_run --input=/path/to/file.csv -c delimiter:";"
             entry_point: entrypoint # for upload_and_run process entry_point is required
             options:
                 ui:
@@ -25,7 +29,7 @@ clever_age_process:
                                                           choices: [',', ';']
                                                           message: delimiter context must be , or ;. {{ value }} given.
             tasks:
-                entrypoint: # Add log info to describe witch file is reading
+                entrypoint: # Add log info to describe which file is reading
                     service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
                     options:
                         message: Read file
@@ -36,7 +40,7 @@ clever_age_process:
                     service: '@CleverAge\ProcessBundle\Task\File\Csv\InputCsvReaderTask'
                     outputs: [ log_line, dump ]
                     options:
-                        delimiter: '{{ delimiter }}' ## delimiter is contextualized you must add -c delimiter:; on console execute
+                        delimiter: '{{ delimiter }}' ## delimiter is contextualized you must add -c delimiter:";" on console execute
                 log_line:
                     service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
                     options:
