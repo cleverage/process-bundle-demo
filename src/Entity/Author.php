@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the CleverAge/ProcessBundleDemo package.
+ *
+ * Copyright (c) Clever-Age
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Entity;
 
 use App\Repository\AuthorRepository;
@@ -16,10 +25,10 @@ class Author
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
+    private string $firstname;
 
     #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
+    private string $lastname;
 
     /**
      * @var Collection<int, Book>
@@ -67,27 +76,5 @@ class Author
     public function getBooks(): Collection
     {
         return $this->books;
-    }
-
-    public function addBook(Book $book): static
-    {
-        if (!$this->books->contains($book)) {
-            $this->books->add($book);
-            $book->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBook(Book $book): static
-    {
-        if ($this->books->removeElement($book)) {
-            // set the owning side to null (unless already changed)
-            if ($book->getAuthor() === $this) {
-                $book->setAuthor(null);
-            }
-        }
-
-        return $this;
     }
 }

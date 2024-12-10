@@ -23,11 +23,11 @@ class Book
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private string $title;
 
     #[ORM\ManyToOne(inversedBy: 'books')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Author $author = null;
+    private Author $author;
 
     public function getId(): ?int
     {
@@ -51,7 +51,7 @@ class Book
         return $this->author;
     }
 
-    public function setAuthor(?Author $author): static
+    public function setAuthor(Author $author): static
     {
         $this->author = $author;
 
