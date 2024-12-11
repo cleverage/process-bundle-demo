@@ -1,0 +1,38 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.entitymanager.reader_remover:
+            description: >
+                A simple process to use DoctrineProcessBundle as entity reader (remove the entity and tries to fetch the same entity)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_remover
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    options:
+                        class_name: 'App\Entity\Book'
+                        criteria:
+                            title: 'Dracula'
+                    outputs: [dump]
+
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    outputs: [remover]
+
+                remover:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineRemoverTask'
+                    outputs: [refetch]
+
+                refetch:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    options:
+                        class_name: 'App\Entity\Book'
+                        criteria:
+                            title: 'Dracula'
+                    outputs: [dumpnullid]
+
+                dumpnullid:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
