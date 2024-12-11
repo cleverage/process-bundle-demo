@@ -1,10 +1,10 @@
 clever_age_process:
     configurations:
-        demo.doctrine.entitymanager.reader_cleaner:
+        demo.doctrine.entitymanager.reader_clearer:
             description: >
-                A simple process to use DoctrineProcessBundle as entity reader (then clean the entitymanager)
+                A simple process to use DoctrineProcessBundle as entity reader (then clear the entitymanager)
             help: >
-                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_cleaner
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_clear
             options:
                 ui:
                     source: Bar
@@ -22,7 +22,7 @@ clever_age_process:
 
                 dump:
                     service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
-                    outputs: [clean]
+                    outputs: [clear]
 
-                clean:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineCleanerTask'
+                clear:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\ClearEntityManagerTask'
