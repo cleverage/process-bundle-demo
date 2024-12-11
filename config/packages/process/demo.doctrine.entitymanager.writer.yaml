@@ -1,0 +1,36 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.entitymanager.writer:
+            description: >
+                A simple process to use DoctrineProcessBundle as entity writer
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.writer
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            firstname: Isaac
+                            lastname: Asimov
+                    outputs: [denormalize]
+                denormalize:
+                    service: '@CleverAge\ProcessBundle\Task\Serialization\DenormalizerTask'
+                    options:
+                        class: App\Entity\Author
+                    outputs: [save]
+                save:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineWriterTask'
+                    outputs: [fetch]
+                fetch:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    options:
+                        class_name: 'App\Entity\Author'
+                        criteria:
+                            lastname: 'Asimov'
+                    outputs: [dump]
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
