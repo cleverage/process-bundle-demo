@@ -1,10 +1,10 @@
 clever_age_process:
     configurations:
-        demo.rest:
+        demo.rest.get:
             description: >
-                A simple process to use RestProcessBundle
+                A simple process to use RestProcessBundle with GET method
             help: >
-                Ex: bin/console cleverage:process:execute demo.rest -c codePostal:"'46800'"
+                Ex: bin/console cleverage:process:execute demo.rest.get -c codePostal:"'46800'"
             options:
                 ui:
                     source: Bar
