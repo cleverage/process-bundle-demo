@@ -34,8 +34,11 @@ clever_age_process:
                     outputs: [batch_write]
                 batch_write:
                     service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineBatchWriterTask'
+                    outputs: [aggregate_write]
                     options:
                         batch_count: 2
+                aggregate_write:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
                     outputs: [fetch]
                 fetch:
                     service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
@@ -43,8 +46,8 @@ clever_age_process:
                         class_name: 'App\Entity\Author'
                         criteria:
                             lastname: 'Lastname'
-                    outputs: [agregate]
-                agregate:
+                    outputs: [agregate_fetch]
+                agregate_fetch:
                     service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
                     outputs: [dump]
                 dump:
