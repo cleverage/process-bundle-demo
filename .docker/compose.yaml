@@ -47,6 +47,15 @@ x-base-mysql: &base-mysql
     MYSQL_USER: app
     MYSQL_PASSWORD: app
 
+x-base-sftp: &base-sftp
+  image: atmoz/sftp
+  volumes:
+    - ./sftp/data:/home/sftp/data
+  environment:
+    SFTP_USERNAME: ${SFTP_USERNAME:-sftp}
+    SFTP_PASSWORD: ${SFTP_PASSWORD:-password}
+  command: ${SFTP_USERNAME:-sftp}:${SFTP_PASSWORD:-password}:${UID:-1000}:${GID:-1000}
+
 name: cleverage-process-bundle-demo
 
 services:
@@ -73,12 +82,10 @@ services:
     ports:
       - "${MYSQL_PORT:-3306}:3306"
   sftp:
-    image: atmoz/sftp
-    volumes:
-      - ./sftp:/home/sftp/
+    <<: *base-sftp
+    tty: true
     ports:
-      - "22:22"
-    command: sftp:password:1000
+      - "${SFTP_PORT:-22}:22"
 
 volumes:
   process_bundle_demo_data:
