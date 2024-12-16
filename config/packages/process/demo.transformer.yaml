@@ -1,6 +1,6 @@
 clever_age_process:
     configurations:
-        demo.sample:
+        demo.transformer:
             description: >
                 A simple process which transform data
             help: >
