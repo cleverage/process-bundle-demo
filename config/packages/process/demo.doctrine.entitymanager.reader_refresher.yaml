@@ -1,0 +1,43 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.entitymanager.reader_refresher:
+            description: >
+                A simple process to use DoctrineProcessBundle as entity reader, modify the entity then refresh it
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_refresher
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    options:
+                        class_name: 'App\Entity\Author'
+                        criteria:
+                            lastname: 'King'
+                        order_by:
+                          lastname: 'asc'
+                    outputs: [dump]
+
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    outputs: [modify]
+
+                modify:
+                    service: '@CleverAge\ProcessBundle\Task\PropertySetterTask'
+                    options:
+                        values:
+                            firstname: Gérard
+                    outputs: [dump_modified]
+
+                dump_modified:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    outputs: [refresh]
+
+                refresh:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineRefresherTask'
+                    outputs: [dump_refreshed]
+
+                dump_refreshed:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
