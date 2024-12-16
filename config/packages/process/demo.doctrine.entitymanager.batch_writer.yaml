@@ -1,0 +1,54 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.entitymanager.batch_writer:
+            description: >
+                A simple process to use DoctrineProcessBundle as entity batch_writer
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.batch_writer
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - author1:
+                                firstname: Firstname 1
+                                lastname: Lastname
+                            - author2:
+                                firstname: Firstname 2
+                                lastname: Lastname
+                            - author3:
+                                firstname: Firstname 3
+                                lastname: Lastname
+                    outputs: [iterate]
+                iterate:
+                    service: '@CleverAge\ProcessBundle\Task\InputIteratorTask'
+                    outputs: [denormalizer]
+                denormalizer:
+                    service: '@CleverAge\ProcessBundle\Task\Serialization\DenormalizerTask'
+                    options:
+                        class: App\Entity\Author
+                    outputs: [batch_write]
+                batch_write:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineBatchWriterTask'
+                    outputs: [aggregate_write]
+                    options:
+                        batch_count: 2
+                aggregate_write:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    outputs: [fetch]
+                fetch:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    options:
+                        class_name: 'App\Entity\Author'
+                        criteria:
+                            lastname: 'Lastname'
+                    outputs: [agregate_fetch]
+                agregate_fetch:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    outputs: [dump]
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

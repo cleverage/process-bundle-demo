@@ -1,0 +1,28 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.entitymanager.reader_detacher:
+            description: >
+                A simple process to use DoctrineProcessBundle as entity reader then detach the entity
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_detacher
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    options:
+                        class_name: 'App\Entity\Author'
+                        criteria:
+                            lastname: 'King'
+                        order_by:
+                          lastname: 'asc'
+                    outputs: [dump]
+
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    outputs: [detach]
+
+                detach:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineDetacherTask'
