@@ -14,7 +14,7 @@ final class Version20241210154810 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add author and book entities to demonstrate the clever/doctrine-process-bundle package - https://github.com/cleverage/process-bundle-demo/issues/19';
     }
 
     public function up(Schema $schema): void
