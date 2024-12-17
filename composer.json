@@ -8,12 +8,12 @@
         }
     },
     "require": {
-        "cleverage/doctrine-process-bundle": "dev-prepare-release",
-        "cleverage/flysystem-process-bundle": "dev-prepare-release",
-        "cleverage/process-bundle": "dev-prepare-release",
-        "cleverage/rest-process-bundle": "dev-prepare-release",
-        "cleverage/soap-process-bundle": "dev-prepare-release",
-        "cleverage/ui-process-bundle": "dev-prepare-release",
+        "cleverage/doctrine-process-bundle": "^2.0",
+        "cleverage/flysystem-process-bundle": "^2.0",
+        "cleverage/process-bundle": "^4.0",
+        "cleverage/rest-process-bundle": "^2.0",
+        "cleverage/soap-process-bundle": "^2.0",
+        "cleverage/ui-process-bundle": "^2.0",
         "league/flysystem-sftp-v3": "^3.0",
         "symfony/flex": "^v2.3"
     },
