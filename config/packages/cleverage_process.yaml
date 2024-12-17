@@ -1,7 +1,7 @@
 imports:
     - { resource: process/ }
 
-clever_age_process_ui:
+clever_age_ui_process:
     logs:
         report_increment_level: Info # all logs higher are equal than Info were added to ProcessExecution report
 
@@ -16,3 +16,8 @@ clever_age_process:
             transformers:
                 callback:
                     callback: strtolower
+        json_decode:
+            transformers:
+                callback:
+                    callback: json_decode
+                    right_parameters: [ true ] # $associative: When true, JSON objects will be returned as associative arrays

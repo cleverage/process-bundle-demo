@@ -1,49 +1,47 @@
 ARG PHP_VERSION=8.2
-FROM php:${PHP_VERSION}-fpm AS php
+FROM php:${PHP_VERSION}-fpm-alpine AS php
+
 ARG XDEBUG_VERSION=3.1.4
-ARG DOCKER_HTTP_PORT=8000
-ENV DOCKER_HTTP_PORT=${DOCKER_HTTP_PORT}
 
-# Set user and group
-ARG UID=1000
-ARG GID=1000
-RUN usermod --uid ${UID} www-data && \
-    groupmod --gid ${GID} www-data
+ARG UID
+ARG GID
 
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN chmod +x /usr/local/bin/install-php-extensions
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash -E
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+COPY /conf.d/ "$PHP_INI_DIR/conf.d/"
 
-# Install packages
-RUN apt-get update && apt-get install -y \
+RUN apk update && apk add \
+    tzdata \
+    shadow \
+    nano \
+    bash \
+    icu-dev \
+    libxml2-dev \
+    libzip-dev \
+    postgresql-dev \
+    unzip \
     wget \
     git \
-    unzip \
-    libicu-dev \
-    libzip-dev \
-    gosu \
-    symfony-cli \
-    supervisor \
-    procps \
     && docker-php-ext-configure intl \
-    && install-php-extensions \
-        intl \
-        pcntl \
-        opcache \
-        zip \
-        gd \
-        imagick \
-        pdo \
-        pdo_pgsql \
-        pgsql \
-        pdo_mysql \
-        mysqli \
-        sysvsem
-RUN pecl install xdebug-${XDEBUG_VERSION}
-## Install composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+    && docker-php-ext-install intl soap opcache zip pdo pdo_pgsql pdo_mysql \
+    && docker-php-ext-enable soap opcache
+
+RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
+  && apk add --update linux-headers \
+  && pecl install xdebug-${XDEBUG_VERSION} \
+  && apk del pcre-dev ${PHPIZE_DEPS}
+
+RUN ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime \
+    && sed -i "s/^;date.timezone =.*/date.timezone = Europe\/Paris/" $PHP_INI_DIR/php.ini
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+RUN usermod -u $UID www-data \
+    && groupmod -g $GID www-data
+
+USER www-data:www-data
+
+WORKDIR /var/www
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
-CMD service supervisor start;symfony server:stop --all;symfony server:ca:install;symfony serve --port=${DOCKER_HTTP_PORT};
+CMD ["php-fpm"]

@@ -1,7 +1,17 @@
-# Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+parameters:
+  local.storage.dir: '%kernel.project_dir%/var/storage/local'
 flysystem:
-    storages:
-        default.storage:
-            adapter: 'local'
-            options:
-                directory: '%kernel.project_dir%/var/storage/default'
+  storages:
+    local.storage:
+      adapter: 'local'
+      options:
+        directory: '%local.storage.dir%'
+
+    remote.storage:
+      adapter: 'sftp'
+      options:
+        host: '%env(string:SFTP_HOST)%'
+        port: '%env(int:SFTP_PORT)%'
+        username: '%env(string:SFTP_USERNAME)%'
+        password: '%env(string:SFTP_PASSWORD)%'
+        root: '%env(string:SFTP_ROOT)%'

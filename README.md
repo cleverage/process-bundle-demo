@@ -1,11 +1,19 @@
-**Process UI Bundle demo**
+CleverAge/ProcessBundleDemo
+=======================
 
-A sample application for process-bundle & process-bundle-UI*
+A demo project using cleverage/process-bundle & cleverage/*-process-bundle bridges
 
-**Usage**
+## Documentation
 
-    make start
+For usage documentation, see:
+[docs/index.md](docs/index.md)
 
-Then acces to UI via https://localhost:8000/process (username: admin@clever-age.com / password: admin@clever-age.com)
+## Support & Contribution
 
-By default this demo use sqlite as default database. Feel free to user pgsql or mysql/mariadb in you project.
+For general support and questions, please use [Github](https://github.com/cleverage/process-bundle-demo/issues).
+If you think you found a bug or you have a feature idea to propose, feel free to open an issue after looking at the [contributing](CONTRIBUTING.md) guide.
+
+## License
+
+This bundle is under the MIT license.
+For the whole copyright, see the [LICENSE](LICENSE) file distributed with this source code.

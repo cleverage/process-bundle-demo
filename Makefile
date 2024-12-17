@@ -1,11 +1,10 @@
 .ONESHELL:
 SHELL := /bin/bash
 
-DOCKER_RUN_PHP = docker compose -f .docker/docker-compose.yml -f .docker/docker-compose.override.yml run --rm php "bash" "-c"
-DOCKER_COMPOSE = docker compose -f .docker/docker-compose.yml -f .docker/docker-compose.override.yml
+DOCKER_RUN_PHP = docker compose -f .docker/compose.yaml run --rm php "bash" "-c"
+DOCKER_COMPOSE = docker compose -f .docker/compose.yaml
 
-
-start: upd doctrine/migrations assets/install #[Global] Start application (but not consumers, use supervisorctl/start)
+start: upd doctrine/migrations doctrine/fixtures assets/install #[Global] Start application
 
 src/vendor: #[Composer] install dependencies
 	$(DOCKER_RUN_PHP) "composer install --no-interaction"
@@ -19,6 +18,7 @@ up: #[Docker] Start containers
 	touch .docker/.env
 	make src/vendor
 	$(DOCKER_COMPOSE) up --remove-orphans
+
 stop: #[Docker] Down containers
 	$(DOCKER_COMPOSE) stop
 
@@ -34,26 +34,17 @@ ps: # [Docker] Show running containers
 bash: #[Docker] Connect to php container with current host user
 	$(DOCKER_COMPOSE) exec -u $$(id -u $${USER}):$$(id -g $${USER}) php bash
 
-supervisorctl/start: #[Supervisor] Start consumers (see .docker/php/supervisor/process_ui.conf)
-	$(DOCKER_COMPOSE) exec -u root:root php supervisorctl start all
-
-supervisorctl/stop: #[Supervisor] Stop consumers (see .docker/php/supervisor/process_ui.conf)
-	$(DOCKER_COMPOSE) exec -u root:root php supervisorctl stop all
-
-supervisorctl/status: #[Supervisor] Show consumers status (see .docker/php/supervisor/process_ui.conf)
-	$(DOCKER_COMPOSE) exec -u root:root php supervisorctl status
-
 logs: #[Docker] Show logs
 	$(DOCKER_COMPOSE) logs -f
 
 doctrine/migrations: #[Symfony] Run database migration
-	$(DOCKER_RUN_PHP) "bin/console do:mi:mi --no-interaction"
+	$(DOCKER_RUN_PHP) "bin/console doctrine:migrations:migrate --no-interaction"
+
+doctrine/fixtures: #[Symfony] Run database fixtures load
+	$(DOCKER_RUN_PHP) "bin/console doctrine:fixtures:load --no-interaction"
 
 assets/install: #[Symfony] Install assets
 	$(DOCKER_RUN_PHP) "bin/console assets:install"
-
-cache/clean: #[Symfony] Clean cache
-	$(DOCKER_RUN_PHP) "bin/console c:c"
 
 xdebug/on: #[Docker] Enable xdebug
 	$(DOCKER_COMPOSE) stop php
@@ -62,3 +53,19 @@ xdebug/on: #[Docker] Enable xdebug
 xdebug/off: #[Docker] Disable xdebug
 	$(DOCKER_COMPOSE) stop php
 	XDEBUG_MODE=off $(DOCKER_COMPOSE) up --remove-orphans --detach
+
+quality: phpstan php-cs-fixer rector #[Quality] Run all quality checks
+
+phpstan: #[Quality] Run PHPStan
+	$(DOCKER_RUN_PHP) "vendor/bin/phpstan --no-progress --memory-limit=1G analyse"
+
+php-cs-fixer: #[Quality] Run PHP-CS-Fixer
+	$(DOCKER_RUN_PHP) "vendor/bin/php-cs-fixer fix --diff --verbose"
+
+rector: #[Quality] Run Rector
+	$(DOCKER_RUN_PHP) "vendor/bin/rector"
+
+tests: phpunit #[Tests] Run all tests
+
+phpunit: #[Tests] Run PHPUnit
+	$(DOCKER_RUN_PHP) "vendor/bin/phpunit"

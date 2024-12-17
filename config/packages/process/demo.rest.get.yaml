@@ -1,0 +1,50 @@
+clever_age_process:
+    configurations:
+        demo.rest.get:
+            description: >
+                A simple process to use RestProcessBundle with GET method
+            help: >
+                Ex: bin/console cleverage:process:execute demo.rest.get -c codePostal:"'46800'"
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+                    entrypoint_type: text
+                    default: ## set default values to UI launch form
+                        context:
+                            - key: codePostal  # allow to change delimiter via UI form
+                              value: ''
+                    constraints: ## constraint to apply on the form
+                        - Collection:
+                              fields:
+                                  input: ~
+                                  context:
+                                      - Collection:
+                                            fields:
+                                                codePostal:
+                                                    - Regex:
+                                                        pattern: '/^\d{5}$/'
+                                                        message: 'Le code postal doit être composé de 5 chiffres.'
+            tasks:
+                entry:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    error_strategy: 'stop'
+                    options:
+                        client: apicarto_ign
+                        url: '/codes-postaux/communes/{codePostal}'
+                        method: 'GET'
+                        url_parameters: { codePostal: '{{ codePostal }}' }
+                    outputs: [json_decode]
+                json_decode:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            json_decode: ~
+                    outputs: [dto]
+                dto:
+                    service: '@CleverAge\ProcessBundle\Task\Serialization\DenormalizerTask'
+                    options:
+                        class: 'App\Dto\Commune[]'
+                    outputs: [debug]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

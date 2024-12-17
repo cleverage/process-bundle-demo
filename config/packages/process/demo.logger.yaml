@@ -1,0 +1,17 @@
+clever_age_process:
+    configurations:
+        demo.logger:
+            description: >
+                A simple process which log a message into a specific logger
+            help: >
+                Ex: bin/console cleverage:process:execute demo.logger
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        level: warning
+                        message: DEMO LOGGER
