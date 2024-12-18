@@ -24,6 +24,8 @@ jobs:
           tools: composer:v2
       - name: Install Composer dependencies (locked)
         uses: ramsey/composer-install@v3
+      - name: Warmup cache
+        run: bin/console cache:warmup
       - name: PHPStan
         run: vendor/bin/phpstan --no-progress --memory-limit=1G analyse --error-format=github
 
