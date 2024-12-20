@@ -21,3 +21,14 @@ clever_age_process:
                 callback:
                     callback: json_decode
                     right_parameters: [ true ] # $associative: When true, JSON objects will be returned as associative arrays
+        substr:
+            contextual_options:
+                offset:
+                    required: true
+                length:
+                    default_is_null: true
+            transformers:
+                callback:
+                    callback: substr
+                    right_parameters: [ '{{ offset }}', '{{ length }}' ]
+

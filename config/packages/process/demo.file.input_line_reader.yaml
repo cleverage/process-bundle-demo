@@ -1,20 +1,23 @@
 clever_age_process:
     configurations:
-        demo.csv_reader:
+        demo.file.input_line_reader:
             description: >
-                A simple process which read a specific csv to log/debug each line
+                A simple process which read all files from a specific directory to log/debug each line
             help: >
-                Ex: bin/console cleverage:process:execute demo.csv_reader
+                bin/console cleverage:process:execute demo.file.input_line_reader
             options:
                 ui:
                     source: Bar
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\File\Csv\CsvReaderTask'
-                    outputs: [ log_line, dump ]
+                    service: '@CleverAge\ProcessBundle\Task\File\FolderBrowserTask'
                     options:
-                        file_path: '%kernel.project_dir%/var/data/sample.csv'
+                        folder_path: '%kernel.project_dir%/var/data'
+                    outputs: read
+                read:
+                    service: '@CleverAge\ProcessBundle\Task\File\InputLineReaderTask'
+                    outputs: [ log_line, dump ]
                 log_line:
                     service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
                     options:

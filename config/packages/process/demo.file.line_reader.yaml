@@ -1,0 +1,52 @@
+clever_age_process:
+    configurations:
+        demo.file.line_reader:
+            description: >
+                A simple process which read each line of a specific file to extract data from specific offsets
+            help: >
+                bin/console cleverage:process:execute demo.file.line_reader
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\File\LineReaderTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/data/sample.txt'
+                    outputs: array
+                array:
+                    service: '@CleverAge\ProcessBundle\Task\InputAggregatorTask'
+                    options:
+                        input_codes: { entry: entry }
+                    outputs: transform
+                transform:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    id:
+                                        code: '[entry]'
+                                        transformers:
+                                            substr:
+                                                offset: 0
+                                                length: 6
+                                            trim: ~
+                                    title:
+                                        code: '[entry]'
+                                        transformers:
+                                            substr:
+                                                offset: 6
+                                                length: 13
+                                            trim: ~
+                                    description:
+                                        code: '[entry]'
+                                        transformers:
+                                            substr:
+                                                offset: 19
+                                                length: 20
+                                            trim: ~
+                    outputs: debug
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

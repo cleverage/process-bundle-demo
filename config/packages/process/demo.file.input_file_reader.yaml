@@ -1,0 +1,22 @@
+clever_age_process:
+    configurations:
+        demo.file.input_file_reader:
+            description: >
+                A simple process which read all files from a specific directory to debug content
+            help: >
+                bin/console cleverage:process:execute demo.file.input_file_reader
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\File\FolderBrowserTask'
+                    options:
+                        folder_path: '%kernel.project_dir%/var/data'
+                    outputs: read
+                read:
+                    service: '@CleverAge\ProcessBundle\Task\File\InputFileReaderTask'
+                    outputs: debug
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
