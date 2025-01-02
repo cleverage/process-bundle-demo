@@ -11,9 +11,14 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\File\FolderBrowserTask'
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
                     options:
-                        folder_path: '%kernel.project_dir%/var/data'
+                        output: '/var/data'
+                    outputs: directory
+                directory:
+                    service: '@CleverAge\ProcessBundle\Task\File\InputFolderBrowserTask'
+                    options:
+                        base_folder_path: '%kernel.project_dir%'
                     outputs: read
                 read:
                     service: '@CleverAge\ProcessBundle\Task\File\InputFileReaderTask'
