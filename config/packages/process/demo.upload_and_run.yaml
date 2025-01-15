@@ -11,6 +11,7 @@ clever_age_process:
                     source: Foo
                     target: Bar
                     entrypoint_type: file
+                    ui_launch_mode: form
                     default: ## set default values to UI launch form
                         #input: /var/wwww ###ignored because entrypoint_type is set to file
                         context:
