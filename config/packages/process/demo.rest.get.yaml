@@ -10,6 +10,7 @@ clever_age_process:
                     source: Bar
                     target: Foo
                     entrypoint_type: text
+                    ui_launch_mode: form
                     default: ## set default values to UI launch form
                         context:
                             - key: codePostal  # allow to change delimiter via UI form

@@ -14,6 +14,30 @@ clever_age_process:
                 ui:
                     source: Bar
                     target: Foo
+                    ui_launch_mode: form
+                    default: ## set default values to UI launch form
+                        context:
+                            - key: source_filesystem  # allow to change delimiter via UI form
+                              value: 'remote.storage'
+                            - key: destination_filesystem  # allow to change delimiter via UI form
+                              value: 'local.storage'
+                    constraints: ## constraint to apply on the form
+                        - Collection:
+                              fields:
+                                  input: ~
+                                  context:
+                                      - Collection:
+                                            missingFieldsMessage: 'source_filesystem and destination_filesystem context variables must be set'
+                                            extraFieldsMessage: 'source_filesystem and destination_filesystem context variables must be set'
+                                            fields:
+                                                source_filesystem:
+                                                    - Choice:
+                                                          choices: [ 'remote.storage', 'local.storage' ]
+                                                          message: 'source_filesystem context variable must be remote.storage or local.storage'
+                                                destination_filesystem:
+                                                    - Choice:
+                                                          choices: [ 'remote.storage', 'local.storage' ]
+                                                          message: 'destination_filesystem context variable must be remote.storage or local.storage'
             tasks:
                 copy:
                     service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'

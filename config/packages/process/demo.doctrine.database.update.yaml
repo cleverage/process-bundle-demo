@@ -10,12 +10,24 @@ clever_age_process:
                     source: Bar
                     target: Foo
                     entrypoint_type: text
+                    ui_launch_mode: form
                     default:
                         context:
                             -   key: firstname
                                 value: Steven
                             -   key: lastname
                                 value: King
+                    constraints: ## constraint to apply on the form
+                        - Collection:
+                              fields:
+                                  input: ~
+                                  context:
+                                      - Collection:
+                                            fields:
+                                                firstname:
+                                                    - NotBlank: ~
+                                                lastname:
+                                                    - NotBlank: ~
             tasks:
                 entry:
                     service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseUpdaterTask'

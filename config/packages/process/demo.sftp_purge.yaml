@@ -13,6 +13,26 @@ clever_age_process:
                 ui:
                     source: Bar
                     target: Foo
+                    ui_launch_mode: form
+                    default: ## set default values to UI launch form
+                        context:
+                            - key: filesystem  # allow to change delimiter via UI form
+                              value: 'remote.storage'
+                            - key: file_pattern  # allow to change delimiter via UI form
+                              value: '/.csv$/'
+                    constraints: ## constraint to apply on the form
+                        - Collection:
+                              fields:
+                                  input: ~
+                                  context:
+                                      - Collection:
+                                            fields:
+                                                filesystem:
+                                                    - Choice:
+                                                          choices: [ 'remote.storage', 'local.storage' ]
+                                                file_pattern:
+                                                    - NotBlank: ~
+
             tasks:
                 get_files:
                     service: '@CleverAge\FlysystemProcessBundle\Task\ListContentTask'
