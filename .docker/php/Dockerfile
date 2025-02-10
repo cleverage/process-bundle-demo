@@ -14,7 +14,7 @@ RUN apk update && apk add \
     shadow \
     nano \
     bash \
-    icu-dev \
+    icu-dev icu-data-full \
     libxml2-dev \
     libzip-dev \
     postgresql-dev \
