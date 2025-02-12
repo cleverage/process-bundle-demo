@@ -8,6 +8,7 @@ clever_age_process:
             entry_point: entrypoint # for upload_and_run process entry_point is required
             options:
                 ui:
+                    ui_launch_mode: form
                     source: Foo
                     target: Bar
                     entrypoint_type: file
