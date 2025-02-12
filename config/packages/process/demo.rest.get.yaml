@@ -7,6 +7,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.rest.get -c codePostal:"'46800'"
             options:
                 ui:
+                    ui_launch_mode: form
                     source: Bar
                     target: Foo
                     entrypoint_type: text
