@@ -1,0 +1,21 @@
+clever_age_process:
+    configurations:
+        demo.sftp_purge_pattern:
+            description: >
+                A sample process to remove files from flysystem storage.
+                filesystem context variable is used to define source filesystem.
+                file_pattern context variable is used to define file_pattern to match.
+                Following help show us how to delete all .csv files from filesystem remote.storage
+                See config/packages/flysystem.yaml to see configured flysystem/storages.
+            help: >
+                bin/console cleverage:process:execute demo.sftp_purge_pattern -c filesystem:remote.storage -c file_pattern:/.csv$/ -vv
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                remove_pattern:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\RemoveFileTask'
+                    options:
+                        filesystem: '{{ filesystem }}'
+                        file_pattern: '{{ file_pattern }}'
