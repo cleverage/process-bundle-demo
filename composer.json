@@ -51,12 +51,6 @@
             "*": "dist"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/cleverage/ui-process-bundle.git"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
