@@ -1,0 +1,14 @@
+clever_age_process:
+    configurations:
+        demo.failed:
+            description: >
+                A simple process which failed
+            help: >
+                Ex: bin/console cleverage:process:execute demo.failed
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
