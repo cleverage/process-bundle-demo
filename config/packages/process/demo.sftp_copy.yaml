@@ -25,6 +25,7 @@ clever_age_process:
                         destination_filesystem: '{{ destination_filesystem }}'
                         file_pattern: '{{ file_pattern }}'
                         remove_source: true
+                        ignore_missing: false
                 aggregate:
                     service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
                     description: >
