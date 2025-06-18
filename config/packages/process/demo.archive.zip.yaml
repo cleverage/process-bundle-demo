@@ -1,0 +1,22 @@
+clever_age_process:
+    configurations:
+        demo.archive.zip:
+            description: >
+                A sample process to zip files from local storage
+            help: >
+                bin/console cleverage:process:execute demo.archive.zip
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\ZipTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/data/zip_archive.zip'
+                        files:
+                            - '%kernel.project_dir%/var/data/sample.txt'
+                        files_base_path: '%kernel.project_dir%/var/data'
+                    outputs: debug
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

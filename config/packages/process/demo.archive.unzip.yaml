@@ -1,0 +1,27 @@
+clever_age_process:
+    configurations:
+        demo.archive.unzip:
+            description: >
+                A sample process to unzip an archive from local storage
+            help: >
+                bin/console cleverage:process:execute demo.archive.unzip
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                constant:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            filename: '%kernel.project_dir%/var/data/archive.zip'
+                            destination: '%kernel.project_dir%/var/data/unzip_archive'
+                    outputs: entry
+                entry:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\UnzipTask'
+                    outputs: directory
+                directory:
+                    service: '@CleverAge\ProcessBundle\Task\File\InputFolderBrowserTask'
+                    outputs: debug
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
