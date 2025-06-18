@@ -1,4 +1,7 @@
 {
+    "cleverage/archive-process-bundle": {
+        "version": "v1.0"
+    },
     "cleverage/doctrine-process-bundle": {
         "version": "dev-prepare-release"
     },

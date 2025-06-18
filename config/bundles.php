@@ -21,4 +21,5 @@ return [
     League\FlysystemBundle\FlysystemBundle::class => ['all' => true],
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
+    CleverAge\ArchiveProcessBundle\CleverAgeArchiveProcessBundle::class => ['all' => true],
 ];
