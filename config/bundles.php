@@ -22,4 +22,5 @@ return [
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     CleverAge\ArchiveProcessBundle\CleverAgeArchiveProcessBundle::class => ['all' => true],
+    CleverAge\CacheProcessBundle\CleverAgeCacheProcessBundle::class => ['all' => true],
 ];

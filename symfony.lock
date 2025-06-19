@@ -2,23 +2,26 @@
     "cleverage/archive-process-bundle": {
         "version": "v1.0"
     },
+    "cleverage/cache-process-bundle": {
+        "version": "v1.0"
+    },
     "cleverage/doctrine-process-bundle": {
-        "version": "dev-prepare-release"
+        "version": "v2.0"
     },
     "cleverage/flysystem-process-bundle": {
-        "version": "dev-prepare-release"
+        "version": "v2.0"
     },
     "cleverage/process-bundle": {
-        "version": "dev-prepare-release"
+        "version": "v4.0"
     },
     "cleverage/rest-process-bundle": {
-        "version": "dev-prepare-release"
+        "version": "v2.0"
     },
     "cleverage/soap-process-bundle": {
-        "version": "dev-prepare-release"
+        "version": "v2.0"
     },
     "cleverage/ui-process-bundle": {
-        "version": "dev-prepare-release"
+        "version": "v2.0"
     },
     "doctrine/deprecations": {
         "version": "1.1",

@@ -56,3 +56,9 @@ services:
             $uri: 'https://apicarto.ign.fr/api'
         tags:
             - { name: cleverage.rest.client }
+
+    # For cleverage/cache-process-bundle
+    app.cleverage_cache_process.adapter.memory:
+        class: App\Adapter\MemoryAdapter
+        tags:
+            - { name: cleverage.cache.adapter }

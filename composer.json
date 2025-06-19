@@ -9,6 +9,7 @@
     },
     "require": {
         "cleverage/archive-process-bundle": "^1.0",
+        "cleverage/cache-process-bundle": "^1.0",
         "cleverage/doctrine-process-bundle": "^2.0",
         "cleverage/flysystem-process-bundle": "^2.0",
         "cleverage/process-bundle": "^4.0",
