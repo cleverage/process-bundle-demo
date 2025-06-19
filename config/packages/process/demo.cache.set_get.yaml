@@ -1,0 +1,68 @@
+clever_age_process:
+    configurations:
+        demo.cache.set_get:
+            description: >
+                A simple process which set and get cached values
+            help: >
+                Ex: bin/console cleverage:process:execute demo.cache.set_get
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                start:
+                    service: '@CleverAge\ProcessBundle\Task\DummyTask'
+                    outputs: [ data, get, get_missing ]
+
+                data:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    outputs: [ format ]
+                    options:
+                        output:
+                            - key: 'key1'
+                              column1: value1-1
+                              column2: value2-1
+                              column3: value3-1
+                            - key: 'key2'
+                              column1: value1-2
+                              column2: value2-2
+                              column3: value3-2
+                            - key: 'key3'
+                              column1: ''
+                              column2: null
+                              column3: value3-3
+                format:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    key:
+                                        code: '[key]'
+                                    value:
+                                        code: '.'
+                    outputs: [ set ]
+
+                set:
+                    service: '@CleverAge\CacheProcessBundle\Task\SetTask'
+                    options:
+                        adapter: 'memory'
+                        key: '' # overrided by input'
+                        value: '' # overrided by input
+
+                get:
+                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    options:
+                        adapter: 'memory'
+                        key: 'key2'
+                    outputs: [ debug ]
+
+                get_missing:
+                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    options:
+                        adapter: 'memory'
+                        key: 'missing'
+                    outputs: [ debug ]
+
+                debug:
+                  service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
