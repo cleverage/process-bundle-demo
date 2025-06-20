@@ -1,0 +1,31 @@
+clever_age_process:
+    configurations:
+        demo.string.preg_match:
+            description: >
+                A simple process which output preg_match result
+            help: >
+                Ex: bin/console cleverage:process:execute demo.string.preg_match
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: preg_match
+                    options:
+                        output: 'foobarbaz'
+
+                preg_match:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: debug
+                    options:
+                        transformers:
+                            preg_match:
+                                pattern: '/(foo)(bar)(baz)/'
+                                flags: !php/const PREG_OFFSET_CAPTURE
+                            property_accessor:
+                                property_path: '[2]'
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
