@@ -19,5 +19,9 @@ clever_age_process:
                 read:
                     service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamReaderTask'
                     outputs: dump
+                    options:
+                        spl_file_object_flags: []
+                        json_flags:
+                            - !php/const JSON_ERROR_NONE
                 dump:
                     service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

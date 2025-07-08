@@ -28,3 +28,7 @@ clever_age_process:
                     service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamWriterTask'
                     options:
                         file_path: '%kernel.project_dir%/var/data/json_stream_writer_{date_time}.json'
+                        spl_file_object_flags: []
+                        json_flags:
+                            - !php/const JSON_PRETTY_PRINT
+                            - !php/const JSON_UNESCAPED_SLASHES
