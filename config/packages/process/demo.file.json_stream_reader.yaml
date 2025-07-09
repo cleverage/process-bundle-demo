@@ -1,0 +1,27 @@
+clever_age_process:
+    configurations:
+        demo.file.json_stream_reader:
+            description: >
+                A simple process which read a json file
+            help: >
+                Ex: bin/console cleverage:process:execute demo.file.json_stream_reader
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    outputs: read
+                    options:
+                        output:
+                            file_path: '%kernel.project_dir%/var/data/json_stream_reader.json'
+                read:
+                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamReaderTask'
+                    outputs: dump
+                    options:
+                        spl_file_object_flags: []
+                        json_flags:
+                            - !php/const JSON_ERROR_NONE
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
