@@ -1,0 +1,20 @@
+clever_age_process:
+    configurations:
+        demo.file.file_splitter:
+            description: >
+                A simple process which split a specific file into smaller ones
+            help: >
+                Ex: bin/console cleverage:process:execute demo.file.file_splitter
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileSplitterTask'
+                    outputs: [ dump ]
+                    options:
+                        file_path: '%kernel.project_dir%/var/data/json_stream_reader.json'
+                        max_lines: 1
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
