@@ -1,0 +1,4 @@
+# Uncomment following if you are using Symfony 7.3 or higher
+#framework:
+#    property_info:
+#        with_constructor_extractor: true
