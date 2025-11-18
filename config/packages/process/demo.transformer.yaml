@@ -44,6 +44,34 @@ clever_age_process:
                                         code: '[lastname]'
                                         transformers:
                                             uppercase: ~ # see config/packages/cleverage_process.yaml for generic transformers definitions
+                                    sprintf_one:
+                                        code: '[firstname]'
+                                        transformers:
+                                            sprintf:
+                                                format: 'one/%%d'
+                                    sprintf_multiple:
+                                        code:
+                                            - '[firstname]'
+                                            - '[lastname]'
+                                        transformers:
+                                            sprintf:
+                                                format: 'multiple/%%s/%%s'
+                                    array_map:
+                                        code:
+                                            - '[id]'
+                                            - '[firstname]'
+                                            - '[lastname]'
+                                        transformers:
+                                            array_map:
+                                                transformers:
+                                                    cast:
+                                                        type: 'string'
+                                                    multi_replace:
+                                                        replace_mapping:
+                                                           ' ': '!'
+                                                           'name': ''
+                                                    uppercase: ~
+
                     outputs: [ load, log ]
                 log:
                     service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
