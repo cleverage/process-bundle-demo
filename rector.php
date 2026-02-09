@@ -7,17 +7,17 @@ use Rector\Set\ValueObject\LevelSetList;
 use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
-    ->withPhpVersion(PhpVersion::PHP_84)
+    ->withPhpVersion(PhpVersion::PHP_85)
     ->withPaths([
         __DIR__.'/src',
         __DIR__.'/tests',
     ])
-    ->withPhpSets(php81: true)
+    ->withPhpSets(php82: true)
     // here we can define, what prepared sets of rules will be applied
     ->withComposerBased(symfony: true)
     ->withPreparedSets(deadCode: true, codeQuality: true, doctrineCodeQuality: true, symfonyCodeQuality: true)
     ->withAttributesSets(symfony: true, doctrine: true)
     ->withSets([
-        LevelSetList::UP_TO_PHP_81,
+        LevelSetList::UP_TO_PHP_82,
     ])
 ;
