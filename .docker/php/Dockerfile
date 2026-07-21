@@ -1,47 +1,49 @@
-ARG PHP_VERSION=8.1
-FROM php:${PHP_VERSION}-fpm-alpine AS php
+ARG PHP_VERSION=8.5
+FROM php:${PHP_VERSION}-fpm
 
-ARG XDEBUG_VERSION=3.1.4
-
+ARG UNAME=www-data
 ARG UID
 ARG GID
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 COPY /conf.d/ "$PHP_INI_DIR/conf.d/"
 
-RUN apk update && apk add \
+ENV TZ="Europe/Paris"
+RUN sed -i "s/^;date.timezone =.*/date.timezone = Europe\/Paris/" $PHP_INI_DIR/php.ini
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
     tzdata \
-    shadow \
     nano \
     bash \
-    icu-dev icu-data-full \
-    libxml2-dev \
-    libzip-dev \
-    postgresql-dev \
-    unzip \
-    wget \
     git \
+    unzip \
+    libicu-dev \
+    libzip-dev \
+    libxml2-dev \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install intl soap opcache zip pdo pdo_pgsql pdo_mysql \
-    && docker-php-ext-enable soap opcache
+    && docker-php-ext-install intl \
+        pdo \
+        pdo_mysql \
+        zip \
+        soap \
+    && docker-php-ext-enable soap
 
-RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
-  && apk add --update linux-headers \
-  && pecl install xdebug-${XDEBUG_VERSION} \
-  && apk del pcre-dev ${PHPIZE_DEPS}
+# For PHP_VERSION < 8.5
+#RUN docker-php-ext-install opcache \
+#    && docker-php-ext-enable opcache
 
-RUN ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime \
-    && sed -i "s/^;date.timezone =.*/date.timezone = Europe\/Paris/" $PHP_INI_DIR/php.ini
+COPY --link --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
+RUN pie install xdebug/xdebug
 
-RUN usermod -u $UID www-data \
-    && groupmod -g $GID www-data
+RUN usermod -u $UID $UNAME \
+    && groupmod -g $GID $UNAME
 
-USER www-data:www-data
+USER $UNAME:$UNAME
 
 WORKDIR /var/www
-
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["php-fpm"]

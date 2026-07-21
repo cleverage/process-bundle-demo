@@ -1,7 +1,7 @@
 .ONESHELL:
 SHELL := /bin/bash
 
-DOCKER_RUN_PHP = docker compose -f .docker/compose.yaml run --rm php "bash" "-c"
+DOCKER_RUN_PHP = docker compose -f .docker/compose.yaml run --rm php-fpm "bash" "-c"
 DOCKER_COMPOSE = docker compose -f .docker/compose.yaml
 
 start: upd doctrine/migrations doctrine/fixtures assets/install #[Global] Start application
@@ -32,7 +32,7 @@ ps: # [Docker] Show running containers
 	$(DOCKER_COMPOSE) ps
 
 bash: #[Docker] Connect to php container with current host user
-	$(DOCKER_COMPOSE) exec -u $$(id -u $${USER}):$$(id -g $${USER}) php bash
+	$(DOCKER_COMPOSE) exec -u $$(id -u $${USER}):$$(id -g $${USER}) php-fpm bash
 
 logs: #[Docker] Show logs
 	$(DOCKER_COMPOSE) logs -f
