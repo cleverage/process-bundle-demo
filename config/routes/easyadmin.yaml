@@ -1,0 +1,4 @@
+# Already imported by cleverage/ui-process-bundle on routes.yaml
+#easyadmin:
+#    resource: .
+#    type: easyadmin.routes

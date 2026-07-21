@@ -8,32 +8,32 @@
         }
     },
     "require": {
-        "cleverage/archive-process-bundle": "^1.0",
-        "cleverage/cache-process-bundle": "^1.0",
-        "cleverage/doctrine-process-bundle": "^2.0",
-        "cleverage/flysystem-process-bundle": "^2.0",
-        "cleverage/process-bundle": "^4.0",
-        "cleverage/rest-process-bundle": "^2.0",
-        "cleverage/soap-process-bundle": "^2.0",
-        "cleverage/ui-process-bundle": "^2.0",
+        "cleverage/archive-process-bundle": "^2.0",
+        "cleverage/cache-process-bundle": "^2.0",
+        "cleverage/doctrine-process-bundle": "^3.0",
+        "cleverage/flysystem-process-bundle": "^3.0",
+        "cleverage/process-bundle": "^5.0",
+        "cleverage/rest-process-bundle": "^3.0",
+        "cleverage/soap-process-bundle": "^3.0",
+        "cleverage/ui-process-bundle": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
         "symfony/flex": "^v2.3"
     },
     "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^3.6",
+        "doctrine/doctrine-fixtures-bundle": "^3 || ^4",
         "friendsofphp/php-cs-fixer": "*",
         "phpstan/extension-installer": "*",
         "phpstan/phpstan": "*",
         "phpstan/phpstan-doctrine": "*",
         "phpstan/phpstan-symfony": "*",
-        "phpunit/phpunit": "<10.0",
+        "phpunit/phpunit": "*",
         "rector/rector": "*",
         "roave/security-advisories": "dev-latest",
-        "symfony/browser-kit": "^6.4|^7.3",
-        "symfony/css-selector": "^6.4|^7.3",
-        "symfony/debug-bundle": "^6.4|^7.3",
+        "symfony/browser-kit": "^6.4 || ^7.4 || ^8",
+        "symfony/css-selector": "^6.4 || ^7.4 || ^8",
+        "symfony/debug-bundle": "^6.4 || ^7.4 || ^8",
         "symfony/maker-bundle": "^1.31",
-        "symfony/web-profiler-bundle": "^6.4|^7.3"
+        "symfony/web-profiler-bundle": "^6.4 || ^7.4 || ^8"
     },
     "scripts": {
         "auto-scripts": {
@@ -58,7 +58,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.3.*"
+            "require": "7.4.*"
         }
     }
 }

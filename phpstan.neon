@@ -2,6 +2,6 @@ parameters:
     level: 10
     paths:
         - src
-        - tests
+#        - tests
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml

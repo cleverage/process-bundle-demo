@@ -1,12 +1,13 @@
 ARG MYSQL_VERSION=9.1.0
 FROM mysql:${MYSQL_VERSION}
 
+ARG UNAME=mysql
 ARG UID
 ARG GID
 
 ENV TZ=Europe/Paris
 
-RUN usermod -u $UID mysql \
-    && groupmod -g $GID mysql
+RUN usermod -u $UID $UNAME \
+    && groupmod -g $GID $UNAME
 
-USER mysql:mysql
+USER $UNAME:$UNAME

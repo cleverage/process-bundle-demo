@@ -4,8 +4,7 @@ x-base-php: &base-php
     args:
       UID: ${UID:-1000}
       GID: ${GID:-1000}
-      PHP_VERSION: ${PHP_VERSION:-8.4}
-      XDEBUG_VERSION: ${XDEBUG_VERSION:-3.4.5}
+      PHP_VERSION: ${PHP_VERSION:-8.5}
   env_file: .env
   volumes:
     - ../:/var/www
@@ -29,7 +28,7 @@ x-base-apache2: &base-apache2
     - ../:/var/www
     - ./apache2/conf/apache2.conf:/etc/apache2/sites-available/000-default.conf
   depends_on:
-    - php
+    - php-fpm
 
 x-base-mysql: &base-mysql
   build:
@@ -59,7 +58,7 @@ x-base-sftp: &base-sftp
 name: cleverage-process-bundle-demo
 
 services:
-  php:
+  php-fpm:
     <<: *base-php
     tty: true
     depends_on:
