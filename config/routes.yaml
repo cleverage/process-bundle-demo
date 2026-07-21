@@ -1,6 +1,5 @@
 ui-process-bundle:
-    resource: '@CleverAgeUiProcessBundle/src/Controller'
-    type: attribute
+    resource: '@CleverAgeUiProcessBundle/config/routes/*.yaml'
 
 controllers:
     resource:

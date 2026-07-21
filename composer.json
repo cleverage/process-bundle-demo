@@ -8,14 +8,14 @@
         }
     },
     "require": {
-        "cleverage/archive-process-bundle": "^1.0",
-        "cleverage/cache-process-bundle": "^1.0",
-        "cleverage/doctrine-process-bundle": "^2.0",
-        "cleverage/flysystem-process-bundle": "^2.0",
-        "cleverage/process-bundle": "^4.0",
-        "cleverage/rest-process-bundle": "^2.0",
-        "cleverage/soap-process-bundle": "^2.0",
-        "cleverage/ui-process-bundle": "^2.0",
+        "cleverage/archive-process-bundle": "^2.0",
+        "cleverage/cache-process-bundle": "^2.0",
+        "cleverage/doctrine-process-bundle": "^3.0",
+        "cleverage/flysystem-process-bundle": "^3.0",
+        "cleverage/process-bundle": "^5.0",
+        "cleverage/rest-process-bundle": "^3.0",
+        "cleverage/soap-process-bundle": "^3.0",
+        "cleverage/ui-process-bundle": "^3.0",
         "league/flysystem-sftp-v3": "^3.0",
         "symfony/flex": "^v2.3"
     },
