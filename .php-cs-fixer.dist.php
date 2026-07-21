@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the CleverAge/ProcessBundleDemo package.
  *
@@ -40,7 +42,7 @@ return (new PhpCsFixer\Config())
     ->setFinder(
         (new PhpCsFixer\Finder())
             ->in(__DIR__.'/src')
-            ->in(__DIR__.'/tests')
+//            ->in(__DIR__.'/tests')
             ->append([__FILE__])
     )
     ->setCacheFile('.php-cs-fixer.cache')

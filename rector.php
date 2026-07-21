@@ -10,7 +10,7 @@ return RectorConfig::configure()
     ->withPhpVersion(PhpVersion::PHP_85)
     ->withPaths([
         __DIR__.'/src',
-        __DIR__.'/tests',
+//        __DIR__.'/tests',
     ])
     ->withPhpSets(php82: true)
     // here we can define, what prepared sets of rules will be applied
