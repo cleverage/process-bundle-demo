@@ -28,6 +28,7 @@ flysystem:
         username: '%env(string:SFTP_USERNAME)%'
         password: '%env(string:SFTP_PASSWORD)%'
         root: '%env(string:SFTP_ROOT)%/incoming'
+        connectivityChecker: App\Flysystem\SftpConnectivityChecker
 
     remote.storage.short_timeout.archive:
       adapter: 'sftp'
@@ -37,6 +38,7 @@ flysystem:
         username: '%env(string:SFTP_USERNAME)%'
         password: '%env(string:SFTP_PASSWORD)%'
         root: '%env(string:SFTP_ROOT)%/archive'
+        connectivityChecker: App\Flysystem\SftpConnectivityChecker
 
     # `sftp-mock` container: a paramiko server that injects a stray packet after idle
     # while keeping the SSH transport open (like the client's SAP server). Two distinct
@@ -52,6 +54,7 @@ flysystem:
         username: '%env(string:SFTP_USERNAME)%'
         password: '%env(string:SFTP_PASSWORD)%'
         root: '%env(string:SFTP_ROOT)%/incoming'
+        connectivityChecker: App\Flysystem\SftpConnectivityChecker
 
     remote.storage.mock.archive:
       adapter: 'sftp'
@@ -61,3 +64,4 @@ flysystem:
         username: '%env(string:SFTP_USERNAME)%'
         password: '%env(string:SFTP_PASSWORD)%'
         root: '%env(string:SFTP_ROOT)%/archive'
+        connectivityChecker: App\Flysystem\SftpConnectivityChecker
