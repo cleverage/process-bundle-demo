@@ -80,11 +80,35 @@ services:
       retries: 100
     ports:
       - "${MYSQL_PORT:-3306}:3306"
+
   sftp:
     <<: *base-sftp
     tty: true
-    ports:
-      - "${SFTP_PORT:-22}:22"
+
+  # Same atmoz/sftp image as `sftp`, but with a deliberately short sshd idle
+  # timeout (see sftp/short-timeout.sh). Used by demo.sftp_stale_connection to
+  # reproduce flysystem-process-bundle issue #24; all other demo.sftp_* processes
+  # keep using the normal `sftp` service.
+  sftp-short:
+    <<: *base-sftp
+    tty: true
+    volumes:
+      - ./sftp/data:/home/sftp/data
+      - ./sftp/short-timeout.sh:/etc/sftp.d/short-timeout.sh:ro
+
+  # Mock SFTP server (paramiko) that, after a short idle, injects a stray SFTP
+  # packet while keeping the SSH transport open - reproducing the client's SAP
+  # server behaviour and thus the VERBATIM issue #24 error
+  # ("Expected NET_SFTP_HANDLE or NET_SFTP_STATUS. Got packet type").
+  sftp-mock:
+    build:
+      context: sftp-mock
+    tty: true
+    volumes:
+      - ./sftp/data:/data
+    environment:
+      SFTP_MOCK_ROOT: /
+      SFTP_MOCK_IDLE: "4"
 
 volumes:
   process_bundle_demo_data:

@@ -31,4 +31,8 @@ clever_age_process:
                 callback:
                     callback: substr
                     right_parameters: [ '{{ offset }}', '{{ length }}' ]
+        sleep: # pause for $value seconds (PHP sleep) then pass the value through
+            transformers:
+                callback:
+                    callback: sleep
 

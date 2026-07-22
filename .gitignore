@@ -1,6 +1,7 @@
 /composer.lock
 .idea
 .composer
+.bash_history
 
 ###> symfony/framework-bundle ###
 /.env.local

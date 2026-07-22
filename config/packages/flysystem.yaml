@@ -11,7 +11,53 @@ flysystem:
       adapter: 'sftp'
       options:
         host: '%env(string:SFTP_HOST)%'
-        port: '%env(int:SFTP_PORT)%'
+        port: 22
         username: '%env(string:SFTP_USERNAME)%'
         password: '%env(string:SFTP_PASSWORD)%'
         root: '%env(string:SFTP_ROOT)%'
+
+    # `sftp-short` container (OpenSSH with a short sshd idle timeout). Two distinct
+    # storages (different roots) on the same host, following the <base>.incoming /
+    # <base>.archive convention. Because OpenSSH closes the idle transport cleanly,
+    # this yields "Connection closed prematurely". Used by demo.sftp_stale_connection.
+    remote.storage.short_timeout.incoming:
+      adapter: 'sftp'
+      options:
+        host: '%env(string:SFTP_SHORT_HOST)%'
+        port: 22
+        username: '%env(string:SFTP_USERNAME)%'
+        password: '%env(string:SFTP_PASSWORD)%'
+        root: '%env(string:SFTP_ROOT)%/incoming'
+
+    remote.storage.short_timeout.archive:
+      adapter: 'sftp'
+      options:
+        host: '%env(string:SFTP_SHORT_HOST)%'
+        port: 22
+        username: '%env(string:SFTP_USERNAME)%'
+        password: '%env(string:SFTP_PASSWORD)%'
+        root: '%env(string:SFTP_ROOT)%/archive'
+
+    # `sftp-mock` container: a paramiko server that injects a stray packet after idle
+    # while keeping the SSH transport open (like the client's SAP server). Two distinct
+    # storages (different roots) on the same host, following the <base>.incoming /
+    # <base>.archive convention. Being different storages, each gets its OWN
+    # SftpConnectionProvider (its OWN phpseclib connection). This yields the VERBATIM
+    # issue #24 error. Used by demo.sftp_fetch_archive_timeout.
+    remote.storage.mock.incoming:
+      adapter: 'sftp'
+      options:
+        host: '%env(string:SFTP_MOCK_HOST)%'
+        port: 22
+        username: '%env(string:SFTP_USERNAME)%'
+        password: '%env(string:SFTP_PASSWORD)%'
+        root: '%env(string:SFTP_ROOT)%/incoming'
+
+    remote.storage.mock.archive:
+      adapter: 'sftp'
+      options:
+        host: '%env(string:SFTP_MOCK_HOST)%'
+        port: 22
+        username: '%env(string:SFTP_USERNAME)%'
+        password: '%env(string:SFTP_PASSWORD)%'
+        root: '%env(string:SFTP_ROOT)%/archive'

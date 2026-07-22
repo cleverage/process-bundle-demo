@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Symfony 7.4 demo project showcasing [`cleverage/process-bundle`](https://github.com/cleverage/process-bundle) v5 and its bridge bundles (archive, cache, doctrine, flysystem, rest, soap, ui). The "product" here is not PHP code — it is the **process configurations** under `config/packages/process/`. Each file demonstrates one feature of the process ecosystem. `src/` contains only a handful of glue classes (entities, fixtures, a few custom adapters/DTOs).
 
+> **Convention — how features are exercised here.** Features (including bug reproductions and regression checks) must be demonstrated **primarily through `clever_age_process` configurations**, each named with a `demo.` prefix and placed under `config/packages/process/` (one file per process, auto-imported). Reach for a throwaway PHP script or a custom `src/` command only as a last resort when a behaviour genuinely cannot be expressed as a process; prefer composing existing tasks and (generic) transformers instead. Example: issue-#24 SFTP reproduction lives in `config/packages/process/demo.sftp_stale_connection.yaml`.
+
 ## Environment & commands
 
 Everything runs inside Docker (`.docker/compose.yaml`), driven by the `Makefile`. Do **not** run PHP/composer/console directly on the host — wrap them in the container. The Makefile targets already do this via `docker compose ... run --rm php-fpm`.

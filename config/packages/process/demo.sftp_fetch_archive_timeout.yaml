@@ -1,0 +1,60 @@
+clever_age_process:
+    configurations:
+        demo.sftp_fetch_archive_timeout:
+            description: >
+                Minimal reproduction of the client's erp_contact_import failure (flysystem-process-bundle issue #24),
+                keeping only the essential shape: get_file fans out (in parallel) to [treatment, archive_file].
+                Pass the get_file storage BASE via the `filesystem` context; get_file uses `{{ filesystem }}.incoming`
+                and archive_file uses `{{ filesystem }}.archive` (the archive storage is deduced from the base - option
+                templating is a plain substitution, so the suffix is appended). They are two DIFFERENT flysystem
+                storages (different roots) on the SAME host, so each has its OWN cached phpseclib connection;
+                archive_file opens a FRESH connection and does NOT reuse get_file's one.
+                The stale connection is get_file's own (`{{ filesystem }}.incoming`): opened by get_file.execute, left
+                idle during the treatment sleep, and re-hit by get_file.next() - FileFetchTask is iterable, so after the
+                outputs are processed it lists the source again on the now-stale connection and fails. This matches the
+                client report ("archiving task and subsequent file listing operations").
+                With `filesystem: remote.storage.mock` the sftp-mock server injects a stray packet after idle while
+                keeping the transport open (like the client's SAP server), yielding the VERBATIM issue #24 error
+                "Expected NET_SFTP_HANDLE or NET_SFTP_STATUS. Got packet type".
+            help: >
+                bin/console cleverage:process:execute demo.sftp_fetch_archive_timeout -c filesystem:remote.storage.mock
+            tasks:
+                get_file:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    description: >
+                        Fetch the source file from `{{ filesystem }}.incoming` (opens + caches connection C_A). Mirrors
+                        the client's get_zip; iterable (file_pattern), fans out to treatment and archive_file (LAST).
+                    options:
+                        source_filesystem: '{{ filesystem }}.incoming'
+                        destination_filesystem: 'local.storage'
+                        file_pattern: '/sample.*\.txt$/'
+                        remove_source: false
+                        ignore_missing: false
+                    outputs: [treatment, debug, archive_file]
+                treatment:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    description: >
+                        Long-running treatment placeholder (feeds the idle duration in seconds to the sleep
+                        transformer). Must exceed the server idle threshold.
+                    options:
+                        output: 10
+                    outputs: [treatment_sleep]
+                treatment_sleep:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    description: >
+                        Keeps connection C_A idle (generic `sleep` transformer). Dead-end branch.
+                    options:
+                        transformers:
+                            sleep: ~
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                archive_file:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    description: >
+                        Archive the file by reading from `{{ filesystem }}.archive` - a DIFFERENT storage (deduced from
+                        the base), so this opens a FRESH connection C_B. Mirrors the client's archive_file.
+                    options:
+                        source_filesystem: '{{ filesystem }}.incoming'
+                        destination_filesystem: '{{ filesystem }}.archive'
+                        remove_source: false
+                        ignore_missing: false
