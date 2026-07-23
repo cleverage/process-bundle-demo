@@ -1,0 +1,56 @@
+clever_age_process:
+    configurations:
+        demo.sftp_stale_connection:
+            description: >
+                Same shape as demo.sftp_fetch_archive_timeout (get_file -> treatment sleep -> archive_file, with
+                get_file re-listing its source on next()), but pointed at the OpenSSH `sftp-short` server via
+                `filesystem: remote.storage.short_timeout`. get_file uses `{{ filesystem }}.incoming` and archive_file
+                uses `{{ filesystem }}.archive` (archive storage deduced from the base).
+                This reproduces the ROOT CAUSE of flysystem-process-bundle issue #24 - a stale, cached SFTP connection
+                reused after the server timed out the idle session - but against OpenSSH the manifestation is
+                "Connection closed prematurely" (OpenSSH closes the idle transport cleanly with SSH_MSG_DISCONNECT, so
+                phpseclib hits EOF before reading a packet). For the VERBATIM issue-#24 wording
+                "Expected NET_SFTP_HANDLE or NET_SFTP_STATUS. Got packet type", run demo.sftp_fetch_archive_timeout
+                against `remote.storage.mock`, whose server leaves a stray packet on an open transport instead.
+            help: >
+                bin/console cleverage:process:execute demo.sftp_stale_connection -c filesystem:remote.storage.short_timeout
+            tasks:
+                get_file:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    description: >
+                        Fetch the source file from `{{ filesystem }}.incoming` (opens + caches the connection).
+                        Iterable (file_pattern); fans out to treatment and archive_file (archive_file LAST).
+                    options:
+                        source_filesystem: '{{ filesystem }}.incoming'
+                        destination_filesystem: 'local.storage'
+                        file_pattern: '/sample.*\.txt$/'
+                        remove_source: false
+                        ignore_missing: false
+                    outputs: [treatment, debug, archive_file]
+                treatment:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    description: >
+                        Long-running treatment placeholder (idle duration in seconds). Must exceed the server idle
+                        threshold (sftp-short drops idle clients after ~6s).
+                    options:
+                        output: 10
+                    outputs: [treatment_sleep]
+                treatment_sleep:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    description: >
+                        Keeps the cached connection idle (generic `sleep` transformer). Dead-end branch.
+                    options:
+                        transformers:
+                            sleep: ~
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                archive_file:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    description: >
+                        Archive by reading from `{{ filesystem }}.archive` - a DIFFERENT storage (deduced from the
+                        base), so this opens a FRESH connection.
+                    options:
+                        source_filesystem: '{{ filesystem }}.incoming'
+                        destination_filesystem: '{{ filesystem }}.archive'
+                        remove_source: false
+                        ignore_missing: false
