@@ -1,0 +1,33 @@
+clever_age_process:
+    configurations:
+        demo.process_launcher:
+            description: >
+                Launch demo.process_launcher.child in a separate system process for each iterated value
+                (ProcessLauncherTask, at most 2 sub-processes at the same time).
+            help: >
+                bin/console cleverage:process:execute demo.process_launcher
+            tasks:
+                values:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [one, two, three]
+                    outputs: [launch]
+                launch:
+                    service: '@CleverAge\ProcessBundle\Task\Process\ProcessLauncherTask'
+                    options:
+                        process: demo.process_launcher.child
+                        max_processes: 2
+                        sleep_interval: 0.1
+                        sleep_interval_after_launch: 0.1
+                        sleep_on_finalize_interval: 0.1
+
+        demo.process_launcher.child:
+            description: Sub-process launched by demo.process_launcher, logs its input.
+            public: false
+            entry_point: log
+            tasks:
+                log:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        level: info
+                        message: 'Child process received its input'
