@@ -2,7 +2,8 @@ clever_age_process:
     configurations:
         demo.file.json_stream_reader:
             description: >
-                A simple process which read a json file
+                A simple process which read a json file. json_flags is set without JSON_THROW_ON_ERROR (the default), so
+                the invalid "error" line of the sample file is skipped instead of failing the process
             help: >
                 Ex: bin/console cleverage:process:execute demo.file.json_stream_reader
             options:
@@ -21,7 +22,6 @@ clever_age_process:
                     outputs: dump
                     options:
                         spl_file_object_flags: []
-                        json_flags:
-                            - !php/const JSON_ERROR_NONE
+                        json_flags: [] # no JSON_THROW_ON_ERROR: invalid lines are skipped
                 dump:
                     service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
