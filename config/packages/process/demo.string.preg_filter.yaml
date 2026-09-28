@@ -1,0 +1,39 @@
+clever_age_process:
+    configurations:
+        demo.string.preg_filter:
+            description: >
+                A simple process which uses PregFilterTransformer with a single pattern, then with a list of patterns and
+                replacements
+            help: >
+                Ex: bin/console cleverage:process:execute demo.string.preg_filter
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: [ single_pattern, multiple_patterns ]
+                    options:
+                        output: '28/09/2026'
+
+                single_pattern:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: debug
+                    options:
+                        transformers:
+                            preg_filter:
+                                pattern: '/^(\d{2})\/(\d{2})\/(\d{4})$/'
+                                replacement: '$3-$2-$1'
+
+                multiple_patterns:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: debug
+                    options:
+                        transformers:
+                            preg_filter:
+                                pattern: [ '/\//', '/2026/' ]
+                                replacement: [ '.', 'MMXXVI' ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
