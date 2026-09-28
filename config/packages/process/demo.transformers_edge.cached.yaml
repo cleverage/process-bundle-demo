@@ -1,0 +1,28 @@
+clever_age_process:
+    configurations:
+        demo.transformers_edge.cached:
+            description: >
+                CachedTransformer on a non-string input converted to string by key_transformers
+            help: >
+                Ex: bin/console cleverage:process:execute demo.transformers_edge.cached
+            tasks:
+                extract:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 42
+                    outputs: [ transform ]
+                transform:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            cached:
+                                cache_key: demo_edge
+                                key_transformers:
+                                    cast:
+                                        type: string
+                                transformers:
+                                    cast:
+                                        type: string
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
