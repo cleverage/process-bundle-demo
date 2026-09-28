@@ -1,0 +1,78 @@
+clever_age_process:
+    configurations:
+        demo.tasks_edge.advanced_stat_counter:
+            description: >
+                AdvancedStatCounterTask with show_every=1 on 3 executions: each execution should be logged, with a correct count
+            help: >
+                Ex: bin/console cleverage:process:execute demo.tasks_edge.advanced_stat_counter -v
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [a, b, c]
+                    outputs: [ stats ]
+                stats:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\AdvancedStatCounterTask'
+                    options:
+                        show_every: 1
+
+        demo.tasks_edge.iterable_batch_null:
+            description: >
+                IterableBatchTask with batch_count=null: everything is buffered and output one by one on flush
+            help: >
+                Ex: bin/console cleverage:process:execute demo.tasks_edge.iterable_batch_null
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [a, b, c]
+                    outputs: [ batch ]
+                batch:
+                    service: '@CleverAge\ProcessBundle\Task\IterableBatchTask'
+                    options:
+                        batch_count: ~
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+
+        demo.tasks_edge.condition_scalar:
+            description: >
+                array_filter with a whole-value condition ('' key) on a list of scalars
+            help: >
+                Ex: bin/console cleverage:process:execute demo.tasks_edge.condition_scalar
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: [a, b]
+                    outputs: [ filter ]
+                filter:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            array_filter:
+                                condition:
+                                    match:
+                                        '': a
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+
+        demo.tasks_edge.column_aggregator_null:
+            description: >
+                ColumnAggregatorTask on a row whose column value is null
+            help: >
+                Ex: bin/console cleverage:process:execute demo.tasks_edge.column_aggregator_null
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: { a: x, b: ~ }
+                    outputs: [ aggregate ]
+                aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\ColumnAggregatorTask'
+                    options:
+                        columns: [a, b]
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
