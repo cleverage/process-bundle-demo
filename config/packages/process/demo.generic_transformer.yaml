@@ -1,0 +1,50 @@
+clever_age_process:
+    generic_transformers:
+        demo_wrap: # wrap the value between a prefix and an optional suffix
+            contextual_options:
+                prefix:
+                    required: true
+                suffix:
+                    required: false
+            transformers:
+                callback:
+                    callback: sprintf
+                    left_parameters: [ '%%s%%s%%s', '{{ prefix }}' ]
+                    right_parameters: [ '{{ suffix }}' ]
+    configurations:
+        demo.generic_transformer:
+            description: >
+                A simple process which uses a generic transformer with a required contextual option and an optional one
+                without default value
+            help: >
+                Ex: bin/console cleverage:process:execute demo.generic_transformer
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: [ with_suffix, without_suffix ]
+                    options:
+                        output: 'value'
+
+                with_suffix:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: debug
+                    options:
+                        transformers:
+                            demo_wrap:
+                                prefix: '['
+                                suffix: ']'
+
+                without_suffix:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: debug
+                    options:
+                        transformers:
+                            demo_wrap:
+                                prefix: '['
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
