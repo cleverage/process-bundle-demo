@@ -1,0 +1,36 @@
+clever_age_process:
+    configurations:
+        demo.error_context.empty_iterable:
+            description: >
+                An empty iterable must simply produce no output (the "after" task still runs once the iteration is over)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.error_context.empty_iterable -vv
+            tasks:
+                iterate:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: []
+                    outputs: [debug]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+
+        demo.error_context.property_setter:
+            description: >
+                A PropertySetterTask failure with a non string/int/array value must report the real exception
+            help: >
+                Ex: bin/console cleverage:process:execute demo.error_context.property_setter -vv
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            name: Foo
+                    outputs: [set]
+                set:
+                    service: '@CleverAge\ProcessBundle\Task\PropertySetterTask'
+                    options:
+                        values:
+                            enabled: true # property path on an array: cannot be written
+                    outputs: [debug]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
