@@ -1,0 +1,39 @@
+clever_age_process:
+    configurations:
+        demo.date.date_parser:
+            description: >
+                A simple process which parses dates with DateParserTransformer: a string and a \DateTimeImmutable are both
+                converted to a \DateTime
+            help: >
+                Ex: bin/console cleverage:process:execute demo.date.date_parser
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: [ parse_string, parse_immutable ]
+                    options:
+                        output: '2026-09-28 12:34:56'
+
+                parse_string:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: debug
+                    options:
+                        transformers:
+                            date_parser:
+                                format: 'Y-m-d H:i:s'
+
+                parse_immutable:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: debug
+                    options:
+                        transformers:
+                            callback:
+                                callback: date_create_immutable
+                            date_parser:
+                                format: 'Y-m-d H:i:s'
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
