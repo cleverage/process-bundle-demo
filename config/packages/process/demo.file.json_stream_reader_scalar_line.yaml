@@ -1,0 +1,23 @@
+clever_age_process:
+    configurations:
+        demo.file.json_stream_reader_scalar_line:
+            description: >
+                Read a JSON stream file whose second line is a scalar (must fail with an explicit error)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.file.json_stream_reader_scalar_line -vv
+            tasks:
+                content:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: [ write ]
+                    options:
+                        output: "{\"a\":1}\n42\n"
+                write:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    outputs: [ read ]
+                    options:
+                        filename: '%kernel.project_dir%/var/data/json_stream_scalar_line.jsonl'
+                read:
+                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamReaderTask'
+                    outputs: [ debug ]
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

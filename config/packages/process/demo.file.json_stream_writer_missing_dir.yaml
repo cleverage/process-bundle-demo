@@ -1,0 +1,22 @@
+clever_age_process:
+    configurations:
+        demo.file.json_stream_writer_missing_dir:
+            description: >
+                Write a JSON stream file into a directory that does not exist yet (it must be created)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.file.json_stream_writer_missing_dir -vv
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    outputs: [ write ]
+                    options:
+                        output:
+                            - column1: value1-1
+                            - column1: value1-2
+                write:
+                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamWriterTask'
+                    outputs: [ debug ]
+                    options:
+                        file_path: '%kernel.project_dir%/var/data/json_stream_missing_dir/sub/out.jsonl'
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
