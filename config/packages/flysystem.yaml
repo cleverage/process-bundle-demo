@@ -7,6 +7,13 @@ flysystem:
       options:
         directory: '%local.storage.dir%'
 
+    # Local storage whose target path is a directory: writing a file there fails.
+    # Used by demo.flysystem.fetch_write_failure (cleverage/flysystem-process-bundle#35).
+    local.storage.fetch_failure:
+      adapter: 'local'
+      options:
+        directory: '%kernel.project_dir%/var/storage/fetch_failure'
+
     remote.storage:
       adapter: 'sftp'
       options:

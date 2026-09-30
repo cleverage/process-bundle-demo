@@ -1,0 +1,35 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.database.read_paginate:
+            description: >
+                Read the book table by pages of 2 rows with the DatabaseReaderTask `paginate` option.
+                Every row must be output once (cleverage/doctrine-process-bundle#30).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.database.read_paginate
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                read:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseReaderTask'
+                    options:
+                        table: 'book'
+                        sql: 'SELECT id FROM book ORDER BY id'
+                        paginate: 2
+                    outputs: [ids]
+
+                ids:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            array_map:
+                                transformers:
+                                    property_accessor:
+                                        property_path: '[id]'
+                            implode:
+                                separator: ','
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
