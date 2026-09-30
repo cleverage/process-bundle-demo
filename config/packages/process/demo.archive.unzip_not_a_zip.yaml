@@ -1,0 +1,22 @@
+clever_age_process:
+    configurations:
+        demo.archive.unzip_not_a_zip:
+            description: >
+                Extract a file that is not a zip archive. The error message must give the ZipArchive error code, as
+                ZipTask does (cleverage/archive-process-bundle#17).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.archive.unzip_not_a_zip
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                unzip:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\UnzipTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/data/sample.txt'
+                        destination: '%kernel.project_dir%/var/data/unzip_archive'
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
