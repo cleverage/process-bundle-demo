@@ -1,0 +1,24 @@
+clever_age_process:
+    configurations:
+        demo.cache.get_invalid_input:
+            description: >
+                GetTask receiving a string input (cleverage/cache-process-bundle#22): the task only accepts an array or
+                null input, it must fail with a clear message
+            help: >
+                Ex: bin/console cleverage:process:execute demo.cache.get_invalid_input
+            tasks:
+                sku:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'key1'
+                    outputs: [ get ]
+
+                get:
+                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    options:
+                        adapter: 'memory'
+                        key: '' # Overridden by the input
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
