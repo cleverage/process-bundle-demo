@@ -1,0 +1,23 @@
+clever_age_process:
+    configurations:
+        demo.archive.zip_write_failure:
+            description: >
+                Zip a file into an archive located in a missing directory. The task must fail instead of outputting the
+                path of an archive that was never written (run it with --no-debug: in debug mode, the PHP warning is turned into an exception) (cleverage/archive-process-bundle#17).
+            help: >
+                Ex: bin/console --no-debug cleverage:process:execute demo.archive.zip_write_failure
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                zip:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\ZipTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/data/missing_directory/demo_zip_write_failure.zip'
+                        files: '%kernel.project_dir%/var/data/sample.txt'
+                        files_base_path: '%kernel.project_dir%/var/data'
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

@@ -1,0 +1,41 @@
+clever_age_process:
+    configurations:
+        demo.archive.zip_files_base_path:
+            description: >
+                Zip a file whose path contains files_base_path twice: only the leading files_base_path must be removed
+                to build the archive entry name (cleverage/archive-process-bundle#16).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.archive.zip_files_base_path && unzip -l var/data/demo_zip_files_base_path.zip
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                # Extracts archived_file.txt into <files_base_path>/backup/<files_base_path>/
+                unzip:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\UnzipTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/data/archive.zip'
+                        destination: 'var/data/demo_zip_files_base_path/backup/var/data'
+                    outputs: [zip_input]
+
+                # UnzipTask outputs the destination directory (a string): replace it with the ZipTask input
+                zip_input:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            constant:
+                                constant:
+                                    files: 'var/data/demo_zip_files_base_path/backup/var/data/archived_file.txt'
+                    outputs: [zip]
+
+                # Paths are relative to the project directory: expected entry "demo_zip_files_base_path/backup/var/data/archived_file.txt"
+                zip:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\ZipTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/data/demo_zip_files_base_path.zip'
+                        files_base_path: 'var/data'
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

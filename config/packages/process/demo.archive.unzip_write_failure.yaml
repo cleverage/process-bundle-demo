@@ -1,0 +1,22 @@
+clever_age_process:
+    configurations:
+        demo.archive.unzip_write_failure:
+            description: >
+                Extract an archive into a destination that is an existing file. The task must fail instead of outputting
+                the destination as if the extraction had succeeded (run it with --no-debug: in debug mode, the PHP warning is turned into an exception) (cleverage/archive-process-bundle#17).
+            help: >
+                Ex: bin/console --no-debug cleverage:process:execute demo.archive.unzip_write_failure
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                unzip:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\UnzipTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/data/archive.zip'
+                        destination: '%kernel.project_dir%/var/data/sample.txt'
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

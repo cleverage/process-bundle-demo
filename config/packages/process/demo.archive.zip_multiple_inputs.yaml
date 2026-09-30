@@ -1,0 +1,31 @@
+clever_age_process:
+    configurations:
+        demo.archive.zip_multiple_inputs:
+            description: >
+                Send two inputs to the same ZipTask, each with its own archive filename and file. Two archives must be
+                created, one per input (cleverage/archive-process-bundle#15).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.archive.zip_multiple_inputs && ls var/data/demo_zip_multiple_inputs_*
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                inputs:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - filename: '%kernel.project_dir%/var/data/demo_zip_multiple_inputs_1.zip'
+                              files: '%kernel.project_dir%/var/data/sample.txt'
+                            - filename: '%kernel.project_dir%/var/data/demo_zip_multiple_inputs_2.zip'
+                              files: '%kernel.project_dir%/var/data/sample.csv'
+                    outputs: [zip]
+
+                zip:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\ZipTask'
+                    options:
+                        files_base_path: '%kernel.project_dir%/var/data'
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

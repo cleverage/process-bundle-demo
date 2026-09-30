@@ -1,0 +1,27 @@
+clever_age_process:
+    configurations:
+        demo.archive.unzip_invalid_input:
+            description: >
+                Send a string (the archive path) to UnzipTask instead of an array. The task must fail with a clear
+                message on the input type (cleverage/archive-process-bundle#18).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.archive.unzip_invalid_input
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                filename:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: '%kernel.project_dir%/var/data/archive.zip'
+                    outputs: [unzip]
+
+                unzip:
+                    service: '@CleverAge\ArchiveProcessBundle\Task\UnzipTask'
+                    options:
+                        destination: '%kernel.project_dir%/var/data/unzip_archive'
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
