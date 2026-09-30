@@ -1,0 +1,49 @@
+clever_age_process:
+    configurations:
+        demo.flysystem.fetch_write_failure:
+            description: >
+                Copy a file with FileFetchTask (remove_source: true) to a storage where the write fails (the target
+                path is a directory). The task must fail and keep the source file (cleverage/flysystem-process-bundle#35).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.flysystem.fetch_write_failure && ls var/storage/local
+            options:
+                ui:
+                    source: Bar
+                    target: Foo
+            tasks:
+                content:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'Some important data'
+                    outputs: [write_source]
+
+                write_source:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    description: The file to copy, in local.storage
+                    options:
+                        filename: '%local.storage.dir%/demo_fetch_write_failure.txt'
+                    outputs: [block_destination]
+
+                block_destination:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    description: Creates a directory named like the file in local.storage.fetch_failure, so writing the file fails
+                    options:
+                        filename: '%kernel.project_dir%/var/storage/fetch_failure/demo_fetch_write_failure.txt/blocker'
+                    outputs: [filename]
+
+                filename:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'demo_fetch_write_failure.txt'
+                    outputs: [fetch]
+
+                fetch:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    options:
+                        source_filesystem: 'local.storage'
+                        destination_filesystem: 'local.storage.fetch_failure'
+                        remove_source: true
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
