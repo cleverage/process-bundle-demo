@@ -1,0 +1,52 @@
+clever_age_process:
+    configurations:
+        demo.cache.get_on_miss:
+            description: >
+                Cache-aside with GetTask on_miss: skip (cleverage/cache-process-bundle#31): a missing key sends the
+                input to the error outputs, which compute the value and store it. key1 is computed the first time,
+                then read from the cache
+            help: >
+                Ex: bin/console cleverage:process:execute demo.cache.get_on_miss
+            tasks:
+                keys:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - key: 'key1'
+                            - key: 'key2'
+                            - key: 'key1'
+                    outputs: [ get ]
+
+                get:
+                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    options:
+                        adapter: 'memory' # key is given by the input
+                        on_miss: skip
+                    outputs: [ found ]
+                    error_outputs: [ compute ]
+
+                found:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+
+                compute:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    key:
+                                        code: '[key]'
+                                    value:
+                                        code: '[key]'
+                                        transformers:
+                                            sprintf:
+                                                format: 'computed %s'
+                    outputs: [ set, computed ]
+
+                set:
+                    service: '@CleverAge\CacheProcessBundle\Task\SetTask'
+                    options:
+                        adapter: 'memory' # key and value are given by the input
+
+                computed:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

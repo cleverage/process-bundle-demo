@@ -1,0 +1,44 @@
+clever_age_process:
+    configurations:
+        demo.cache.set_expires_after:
+            description: >
+                SetTask expires_after (cleverage/cache-process-bundle#32): the item is stored for 1 second, it is found
+                right after, and missing after a 2 seconds pause
+            help: >
+                Ex: bin/console cleverage:process:execute demo.cache.set_expires_after
+            tasks:
+                set:
+                    service: '@CleverAge\CacheProcessBundle\Task\SetTask'
+                    options:
+                        adapter: 'memory'
+                        key: 'short_lived'
+                        value: 'short lived value'
+                        expires_after: 1
+                    outputs: [ get_before, wait ]
+
+                get_before:
+                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    options:
+                        adapter: 'memory'
+                        key: 'short_lived'
+                        on_miss: fail
+                    outputs: [ debug ]
+
+                wait:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            constant:
+                                constant: 2
+                            sleep: ~
+                    outputs: [ get_after ]
+
+                get_after:
+                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    options:
+                        adapter: 'memory'
+                        key: 'short_lived'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

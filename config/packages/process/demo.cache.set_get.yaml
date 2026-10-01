@@ -46,9 +46,7 @@ clever_age_process:
                 set:
                     service: '@CleverAge\CacheProcessBundle\Task\SetTask'
                     options:
-                        adapter: 'memory'
-                        key: '' # overrided by input'
-                        value: '' # overrided by input
+                        adapter: 'memory' # key and value are given by the input
 
                 get:
                     service: '@CleverAge\CacheProcessBundle\Task\GetTask'

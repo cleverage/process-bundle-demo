@@ -1,18 +1,18 @@
 clever_age_process:
     configurations:
-        demo.cache.set_invalid_input_option:
+        demo.cache.set_invalid_key:
             description: >
-                SetTask receiving an input with an invalid option type (cleverage/cache-process-bundle#23): the input
-                values must be validated like the options
+                SetTask with a key containing a PSR-6 reserved character (cleverage/cache-process-bundle#30): the key is
+                rejected by the task, also with --no-debug / in production (Symfony adapters only validate keys with
+                assert())
             help: >
-                Ex: bin/console cleverage:process:execute demo.cache.set_invalid_input_option
+                Ex: bin/console cleverage:process:execute demo.cache.set_invalid_key
             tasks:
                 item:
                     service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
                     options:
                         output:
-                            adapter: 1
-                            key: 'key1'
+                            key: 'ABC/001'
                             value: 'value1'
                     outputs: [ set ]
 
