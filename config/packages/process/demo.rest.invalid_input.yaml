@@ -1,0 +1,25 @@
+clever_age_process:
+    configurations:
+        demo.rest.invalid_input:
+            description: >
+                RequestTask receiving a string input (cleverage/rest-process-bundle#38): the task only accepts an
+                array or empty input, it must fail with a clear message
+            help: >
+                Ex: bin/console cleverage:process:execute demo.rest.invalid_input
+            tasks:
+                input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: '/codes-postaux/communes/46800'
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    options:
+                        client: apicarto_ign
+                        url: '/codes-postaux/communes/46800'
+                        method: 'GET'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

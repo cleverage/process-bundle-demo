@@ -1,0 +1,27 @@
+clever_age_process:
+    configurations:
+        demo.rest.log_response:
+            description: >
+                RequestTask with log_response and the url given by the input (cleverage/rest-process-bundle#37): run
+                with -vv, the "Response received" log must give the requested url and the response content
+            help: >
+                Ex: bin/console cleverage:process:execute demo.rest.log_response -vv
+            tasks:
+                input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            url: '/codes-postaux/communes/46800'
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    options:
+                        client: apicarto_ign
+                        url: '/configured/url'
+                        method: 'GET'
+                        log_response: true
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
