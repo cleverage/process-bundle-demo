@@ -1,0 +1,76 @@
+clever_age_process:
+    configurations:
+        demo.soap.headers_leak:
+            description: >
+                RequestTask with soap_call_headers, then the soap_request transformer on the same client
+                (cleverage/soap-process-bundle#30): the TaskToken header must only be sent by the task (the WireMock
+                request journal must count 1 request with it)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.soap.headers_leak
+            tasks:
+                reset:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    description: Reset the WireMock request journal
+                    options:
+                        client: wiremock_admin
+                        url: '/requests'
+                        method: 'DELETE'
+                    outputs: [ input ]
+
+                input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            id: 1
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\SoapProcessBundle\Task\RequestTask'
+                    options:
+                        client: wiremock
+                        method: 'GetBook'
+                        soap_call_headers:
+                            TaskToken:
+                                namespace: 'urn:demo'
+                                data: 'from-the-task'
+                    outputs: [ transformer_input ]
+
+                transformer_input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            id: 2
+                    outputs: [ transformer ]
+
+                transformer:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            soap_request:
+                                client: wiremock
+                                method: 'GetBook'
+                    outputs: [ no_input ]
+
+                no_input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    description: The next request does not take the previous output as input
+                    options:
+                        output: { }
+                    outputs: [ count ]
+
+                count:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    description: Count the SOAP requests sent with the TaskToken header, must output {"count":1}
+                    options:
+                        client: wiremock_admin
+                        url: '/requests/count'
+                        method: 'POST'
+                        data:
+                            method: 'POST'
+                            url: '/soap'
+                            bodyPatterns:
+                                - contains: 'TaskToken'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

@@ -1,0 +1,25 @@
+clever_age_process:
+    configurations:
+        demo.soap.false_result:
+            description: >
+                SOAP method legitimately returning false (cleverage/soap-process-bundle#31): false must be output, the
+                call must not be handled as failed
+            help: >
+                Ex: bin/console cleverage:process:execute demo.soap.false_result
+            tasks:
+                input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            id: 1
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\SoapProcessBundle\Task\RequestTask'
+                    options:
+                        client: wiremock
+                        method: 'IsAvailable'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

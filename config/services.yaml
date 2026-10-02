@@ -42,8 +42,7 @@ services:
             $options:
                 trace: true
                 exceptions: true
-        calls:
-            - [ setSoapOptions, [ { features: SOAP_SINGLE_ELEMENT_ARRAYS} ] ]
+                features: !php/const SOAP_SINGLE_ELEMENT_ARRAYS
         tags:
             - { name: cleverage.soap.client }
 
@@ -70,6 +69,34 @@ services:
             $uri: 'https://apicarto.ign.fr/api'
         tags:
             - { name: cleverage.rest.client }
+
+    # SOAP clients (non-WSDL mode, urn:demo) on the WireMock service (stubs .docker/wiremock/mappings/soap-*.json).
+    # The headers set by `calls` are sent with every call (cleverage/soap-process-bundle#29); the second client
+    # does not throw on SOAP faults (exceptions: false, cleverage/soap-process-bundle#32).
+    app.cleverage_soap_process.client.wiremock:
+        class: CleverAge\SoapProcessBundle\Client\Client
+        bind:
+            $code: 'wiremock'
+            $wsdl: null
+            $options:
+                location: '%env(string:WIREMOCK_URL)%/soap'
+                uri: 'urn:demo'
+        calls:
+            - [ setSoapHeaders, [ [ !service { class: SoapHeader, arguments: [ 'urn:demo', 'ClientToken', 'from-the-client-definition' ] } ] ] ]
+        tags:
+            - { name: cleverage.soap.client }
+
+    app.cleverage_soap_process.client.wiremock_no_exceptions:
+        class: CleverAge\SoapProcessBundle\Client\Client
+        bind:
+            $code: 'wiremock_no_exceptions'
+            $wsdl: null
+            $options:
+                location: '%env(string:WIREMOCK_URL)%/soap'
+                uri: 'urn:demo'
+                exceptions: false
+        tags:
+            - { name: cleverage.soap.client }
 
     # REST client on an unresolvable host (.invalid TLD): every request fails with a transport error.
     # Used by demo.rest.transport_error (cleverage/rest-process-bundle#36).
