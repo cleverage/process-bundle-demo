@@ -1,0 +1,19 @@
+{
+  "name": "SOAP (non-WSDL, urn:demo): GetBook returns a title",
+  "request": {
+    "method": "POST",
+    "urlPath": "/soap",
+    "headers": {
+      "SOAPAction": {
+        "contains": "#GetBook"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "text/xml; charset=utf-8"
+    },
+    "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns1=\"urn:demo\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><SOAP-ENV:Body><ns1:GetBookResponse><return xsi:type=\"xsd:string\">It</return></ns1:GetBookResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>"
+  }
+}

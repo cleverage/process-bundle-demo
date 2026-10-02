@@ -1,0 +1,56 @@
+clever_age_process:
+    configurations:
+        demo.soap.client_headers:
+            description: >
+                RequestTask without soap_call_headers on a client whose headers are set by `calls`
+                (cleverage/soap-process-bundle#29): the ClientToken header of the client definition must be sent
+                (the WireMock request journal must count 1 request with it)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.soap.client_headers
+            tasks:
+                reset:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    description: Reset the WireMock request journal
+                    options:
+                        client: wiremock_admin
+                        url: '/requests'
+                        method: 'DELETE'
+                    outputs: [ input ]
+
+                input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            id: 1
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\SoapProcessBundle\Task\RequestTask'
+                    options:
+                        client: wiremock
+                        method: 'GetBook'
+                    outputs: [ no_input ]
+
+                no_input:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    description: The next request does not take the previous output as input
+                    options:
+                        output: { }
+                    outputs: [ count ]
+
+                count:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    description: Count the SOAP requests sent with the ClientToken header, must output {"count":1}
+                    options:
+                        client: wiremock_admin
+                        url: '/requests/count'
+                        method: 'POST'
+                        data:
+                            method: 'POST'
+                            url: '/soap'
+                            bodyPatterns:
+                                - contains: 'ClientToken'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

@@ -33,6 +33,18 @@ cases (status codes, transport errors...) can be reproduced at will.
 
 Run them with `bin/console cleverage:process:execute <process>` (`make bash` first).
 
+### Mocking a SOAP service
+
+WireMock also mocks SOAP services: the `soap-*.json` stubs answer SOAP envelopes on `/soap`, matched on the
+`SOAPAction` header (`urn:demo#<Method>` in non-WSDL mode). The `wiremock` SOAP client (`config/services.yaml`) uses
+the non-WSDL mode (`location` / `uri` options), and sets a `ClientToken` header with `calls: [setSoapHeaders, ...]`;
+`wiremock_no_exceptions` uses the `exceptions: false` option.
+
+The `demo.soap.client_headers` and `demo.soap.headers_leak` processes check the SOAP headers actually sent, by
+counting the matching requests with the admin API (`POST /__admin/requests/count` with a `bodyPatterns` criterion);
+`demo.soap.false_result` and `demo.soap.fault_without_exceptions` use the `IsAvailable` (returns `false`) and `Fail`
+(SOAP fault) mocked methods.
+
 ### Adding a stub
 
 1. Call the API once and look at the unmatched request: `curl http://localhost:8089/__admin/requests/unmatched`.
