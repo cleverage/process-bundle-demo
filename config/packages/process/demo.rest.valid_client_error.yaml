@@ -1,0 +1,20 @@
+clever_age_process:
+    configurations:
+        demo.rest.valid_client_error:
+            description: >
+                RequestTask with a 4xx status code declared in valid_response_code (cleverage/rest-process-bundle#35):
+                the response body must be output (apicarto answers 400 to an invalid postal code)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.rest.valid_client_error
+            tasks:
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    options:
+                        client: apicarto_ign
+                        url: '/codes-postaux/communes/invalid'
+                        method: 'GET'
+                        valid_response_code: [ 200, 400 ]
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

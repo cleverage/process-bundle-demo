@@ -71,6 +71,16 @@ services:
         tags:
             - { name: cleverage.rest.client }
 
+    # REST client on an unresolvable host (.invalid TLD): every request fails with a transport error.
+    # Used by demo.rest.transport_error (cleverage/rest-process-bundle#36).
+    app.cleverage_rest_process.client.unreachable:
+        class: CleverAge\RestProcessBundle\Client\Client
+        bind:
+            $code: 'unreachable'
+            $uri: 'https://unreachable.invalid/api'
+        tags:
+            - { name: cleverage.rest.client }
+
     # For cleverage/cache-process-bundle
     app.cleverage_cache_process.adapter.memory:
         class: App\Adapter\MemoryAdapter
