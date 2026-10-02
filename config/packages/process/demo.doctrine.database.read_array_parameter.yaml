@@ -1,0 +1,22 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.database.read_array_parameter:
+            description: >
+                DatabaseReaderTask with an array parameter (IN clause), typed with the DBAL 4 ArrayParameterType enum
+                as documented in database_reader_task.md
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.database.read_array_parameter
+            tasks:
+                read:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseReaderTask'
+                    options:
+                        sql: 'SELECT id, title FROM book WHERE title IN (:titles) ORDER BY id'
+                        table: 'book'
+                        params:
+                            titles: [ 'It', 'Salem' ]
+                        types:
+                            titles: !php/enum Doctrine\DBAL\ArrayParameterType::STRING
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

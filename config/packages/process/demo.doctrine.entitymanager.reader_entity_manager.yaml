@@ -1,0 +1,18 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.entitymanager.reader_entity_manager:
+            description: >
+                DoctrineReaderTask with an unknown entity_manager (cleverage/doctrine-process-bundle#32): the option must
+                select the entity manager, an unknown name must fail
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_entity_manager
+            tasks:
+                read:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    options:
+                        class_name: 'App\Entity\Book'
+                        entity_manager: 'unknown'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

@@ -1,0 +1,17 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.database.read_sql_without_table:
+            description: >
+                DatabaseReaderTask with the sql option only (cleverage/doctrine-process-bundle#34): table is not used
+                when sql is given, it must not be required
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.database.read_sql_without_table
+            tasks:
+                read:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseReaderTask'
+                    options:
+                        sql: 'SELECT id, title FROM book ORDER BY id'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

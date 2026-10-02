@@ -1,0 +1,32 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.database.read_multiple_inputs:
+            description: >
+                DatabaseReaderTask receiving several inputs (cleverage/doctrine-process-bundle#33): the query must be
+                executed again for each input, every row being output each time
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.database.read_multiple_inputs
+            tasks:
+                inputs:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [ 'first', 'second', 'third' ]
+                    outputs: [ read ]
+
+                read:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseReaderTask'
+                    options:
+                        sql: 'SELECT title FROM book ORDER BY id'
+                        table: 'book'
+                    outputs: [ title ]
+
+                title:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            property_accessor:
+                                property_path: '[title]'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
