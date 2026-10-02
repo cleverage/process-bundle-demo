@@ -14,6 +14,18 @@ flysystem:
       options:
         directory: '%kernel.project_dir%/var/storage/fetch_failure'
 
+    # Source and destination storages of the FileFetchTask / RemoveFileTask demos
+    # (demo.flysystem.fetch_* / demo.flysystem.remove_*), emptied by each demo.
+    local.storage.fetch_source:
+      adapter: 'local'
+      options:
+        directory: '%kernel.project_dir%/var/storage/fetch_source'
+
+    local.storage.fetch_destination:
+      adapter: 'local'
+      options:
+        directory: '%kernel.project_dir%/var/storage/fetch_destination'
+
     remote.storage:
       adapter: 'sftp'
       options:

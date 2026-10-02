@@ -1,0 +1,56 @@
+clever_age_process:
+    configurations:
+        demo.flysystem.fetch_pattern_multiple_inputs:
+            description: >
+                FileFetchTask with file_pattern receiving several inputs (cleverage/flysystem-process-bundle#38): the
+                matching files must be copied for each input
+            help: >
+                Ex: bin/console cleverage:process:execute demo.flysystem.fetch_pattern_multiple_inputs && ls var/storage/fetch_source var/storage/fetch_destination
+            tasks:
+                clean:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    description: Empty both storages
+                    options:
+                        output:
+                            - '%kernel.project_dir%/var/storage/fetch_source'
+                            - '%kernel.project_dir%/var/storage/fetch_destination'
+                    outputs: [ remove_storages ]
+
+                remove_storages:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileRemoverTask'
+                    outputs: [ content ]
+
+                content:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'Some data'
+                    outputs: [ write_0 ]
+
+                write_0:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/storage/fetch_source/a.txt'
+                    outputs: [ write_1 ]
+
+                write_1:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/storage/fetch_source/b.txt'
+                    outputs: [ inputs ]
+
+                inputs:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [ 'first', 'second' ]
+                    outputs: [ task ]
+
+                task:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    options:
+                        source_filesystem: 'local.storage.fetch_source'
+                        destination_filesystem: 'local.storage.fetch_destination'
+                        file_pattern: '/\.txt$/'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
