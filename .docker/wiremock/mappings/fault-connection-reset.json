@@ -1,0 +1,10 @@
+{
+  "name": "Fault injection: the connection is reset, the client gets a transport error",
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/unstable"
+  },
+  "response": {
+    "fault": "CONNECTION_RESET_BY_PEER"
+  }
+}

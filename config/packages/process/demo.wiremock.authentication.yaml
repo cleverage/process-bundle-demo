@@ -1,0 +1,40 @@
+clever_age_process:
+    configurations:
+        demo.wiremock.authentication:
+            description: >
+                WireMock: header matching (authors-authorized.json, authors-unauthorized.json): the authors are returned
+                with the expected bearer token, a request without token is unauthorized (401, error outputs)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.wiremock.authentication
+            tasks:
+                requests:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - headers: { }
+                            - headers: { Authorization: 'Bearer demo-token' }
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    error_strategy: skip
+                    options:
+                        client: wiremock
+                        url: '/authors'
+                        method: 'GET'
+                    outputs: [ decode ]
+                    error_outputs: [ error ]
+
+                decode:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            json_decode: ~
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+
+                error:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    description: Receives the response body of the requests in error (error_outputs)

@@ -1,0 +1,17 @@
+{
+  "name": "POST without title: validation error (lower priority than the matching stub)",
+  "priority": 10,
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/books"
+  },
+  "response": {
+    "status": 422,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "error": "The title is required"
+    }
+  }
+}

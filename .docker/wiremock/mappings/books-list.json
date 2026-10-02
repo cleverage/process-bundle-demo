@@ -1,0 +1,14 @@
+{
+  "name": "Static JSON response: the list of books, read from a body file",
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/books"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "books.json"
+  }
+}

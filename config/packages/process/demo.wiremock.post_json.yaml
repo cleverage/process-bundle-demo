@@ -1,0 +1,42 @@
+clever_age_process:
+    configurations:
+        demo.wiremock.post_json:
+            description: >
+                WireMock: POST a JSON body (books-create.json, books-create-invalid.json): a book with a title is
+                created (201, the response echoes the title), a book without title is rejected (422) and its response
+                body is sent to the error outputs
+            help: >
+                Ex: bin/console cleverage:process:execute demo.wiremock.post_json
+            tasks:
+                books:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - data: { title: 'Carrie' }
+                            - data: { author: 'Unknown' }
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    error_strategy: skip
+                    options:
+                        client: wiremock
+                        url: '/books'
+                        method: 'POST'
+                        valid_response_code: [ 201 ]
+                    outputs: [ decode ]
+                    error_outputs: [ error ]
+
+                decode:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            json_decode: ~
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+
+                error:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    description: Receives the response body of the requests in error (error_outputs)

@@ -1,0 +1,24 @@
+{
+  "name": "POST with a JSON body: matching on the body, the created book echoes the sent title",
+  "request": {
+    "method": "POST",
+    "urlPath": "/api/books",
+    "headers": {
+      "Content-Type": {
+        "contains": "application/json"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.title"
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"id\": {{randomInt lower=100 upper=999}}, \"title\": \"{{jsonPath request.body '$.title'}}\"}"
+  }
+}

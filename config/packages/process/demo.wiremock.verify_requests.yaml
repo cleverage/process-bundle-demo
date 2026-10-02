@@ -1,0 +1,74 @@
+clever_age_process:
+    configurations:
+        demo.wiremock.verify_requests:
+            description: >
+                WireMock: verify the requests received by the mocked API through the WireMock admin API: reset the
+                request journal, call the API twice, then count the received GET requests on /api/books*
+            help: >
+                Ex: bin/console cleverage:process:execute demo.wiremock.verify_requests
+            tasks:
+                reset:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    description: Reset the request journal (DELETE /__admin/requests)
+                    options:
+                        client: wiremock_admin
+                        url: '/requests'
+                        method: 'DELETE'
+                    outputs: [ no_input_1 ]
+
+                no_input_1:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    description: The next request does not take the previous response as input
+                    options:
+                        output: { }
+                    outputs: [ books ]
+
+                books:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    options:
+                        client: wiremock
+                        url: '/books'
+                        method: 'GET'
+                    outputs: [ no_input_2 ]
+
+                no_input_2:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: { }
+                    outputs: [ book ]
+
+                book:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    options:
+                        client: wiremock
+                        url: '/books/1'
+                        method: 'GET'
+                    outputs: [ no_input_3 ]
+
+                no_input_3:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: { }
+                    outputs: [ count ]
+
+                count:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    description: Count the matching requests (POST /__admin/requests/count), outputs {"count":2}
+                    options:
+                        client: wiremock_admin
+                        url: '/requests/count'
+                        method: 'POST'
+                        data:
+                            method: 'GET'
+                            urlPathPattern: '/api/books.*'
+                    outputs: [ decode ]
+
+                decode:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            json_decode: ~
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

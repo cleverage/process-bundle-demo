@@ -1,0 +1,17 @@
+{
+  "name": "Error status code: book 500 triggers a server error",
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/books/500"
+  },
+  "response": {
+    "status": 500,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "error": "Internal error"
+    }
+  }
+}

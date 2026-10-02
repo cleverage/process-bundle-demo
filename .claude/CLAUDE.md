@@ -56,7 +56,7 @@ Each config's `help:` line shows a concrete example. `-c key:"'value'"` injects 
 
 **Bridge bundles** each add a small set of tasks (`src/Task/`) plus a client/adapter concept wired in `config/services.yaml`:
 - `doctrine-process-bundle` — DB & entity tasks: `Database/DatabaseReaderTask`, `DatabaseUpdaterTask`, and `EntityManager/*` (`DoctrineReaderTask`, `DoctrineWriterTask`, `DoctrineBatchWriterTask`, cleaner/detacher/refresher/remover/clearer).
-- `rest-process-bundle` — `Task/RequestTask` driven by a tagged `cleverage.rest.client` (see `apicarto_ign` client in `services.yaml`).
+- `rest-process-bundle` — `Task/RequestTask` driven by a tagged `cleverage.rest.client` (see `apicarto_ign` client in `services.yaml`). To mock an API, prefer the `wiremock` service and its `wiremock` / `wiremock_admin` clients (stubs in `.docker/wiremock/`, see `docs/wiremock.md` and the `demo.wiremock.*` processes).
 - `soap-process-bundle` — `Task/RequestTask` driven by a tagged `cleverage.soap.client` (see `oorsprong_countryinfo` client).
 - `flysystem-process-bundle` — `FileFetchTask`, `ListContentTask`, `RemoveFileTask` over Flysystem storages (config in `config/packages/flysystem.yaml`); the demo also uses SFTP.
 - `archive-process-bundle` — `ZipTask` / `UnzipTask`.

@@ -1,0 +1,18 @@
+{
+  "name": "Path matching and response templating: a book built from the requested id",
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/api/books/[0-9]+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "id": "{{request.pathSegments.[2]}}",
+      "title": "Book {{request.pathSegments.[2]}}",
+      "requestedAt": "{{now}}"
+    }
+  }
+}

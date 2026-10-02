@@ -110,5 +110,17 @@ services:
       SFTP_MOCK_ROOT: /
       SFTP_MOCK_IDLE: "4"
 
+  # WireMock (https://wiremock.org/): mocks the HTTP APIs called by the demo.wiremock.* processes.
+  # Stubs are loaded at startup from ./wiremock/mappings (bodies in ./wiremock/__files), response
+  # templating is enabled for every stub. Admin UI / API: http://localhost:${WIREMOCK_PORT:-8089}/__admin
+  wiremock:
+    image: wiremock/wiremock:3.13.2
+    tty: true
+    volumes:
+      - ./wiremock:/home/wiremock
+    command: [ "--global-response-templating", "--verbose" ]
+    ports:
+      - "${WIREMOCK_PORT:-8089}:8080"
+
 volumes:
   process_bundle_demo_data:
