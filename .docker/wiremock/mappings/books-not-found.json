@@ -1,0 +1,17 @@
+{
+  "name": "Error status code: book 404 does not exist (higher priority than the generic book stub)",
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/books/404"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "error": "Book not found"
+    }
+  }
+}

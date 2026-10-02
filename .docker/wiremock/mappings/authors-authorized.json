@@ -1,0 +1,25 @@
+{
+  "name": "Header matching: the authors are only returned with the expected bearer token",
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/authors",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer demo-token"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [
+      {
+        "id": 1,
+        "name": "Stephen King"
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+clever_age_process:
+    configurations:
+        demo.wiremock.path_templating:
+            description: >
+                WireMock: request matching on a path pattern and response templating (books-get.json): the mocked book
+                is built from the requested id, given by the input
+            help: >
+                Ex: bin/console cleverage:process:execute demo.wiremock.path_templating
+            tasks:
+                ids:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - url_parameters: { id: '1' }
+                            - url_parameters: { id: '42' }
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    options:
+                        client: wiremock
+                        url: '/books/{id}'
+                        method: 'GET'
+                    outputs: [ decode ]
+
+                decode:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            json_decode: ~
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

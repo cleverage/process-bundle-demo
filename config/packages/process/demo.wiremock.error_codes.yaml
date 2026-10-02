@@ -1,0 +1,42 @@
+clever_age_process:
+    configurations:
+        demo.wiremock.error_codes:
+            description: >
+                WireMock: error status codes (books-not-found.json, books-server-error.json): with error_strategy skip,
+                the books 404 (404) and 500 (500) are sent to the error outputs, the other ones are output
+            help: >
+                Ex: bin/console cleverage:process:execute demo.wiremock.error_codes
+            tasks:
+                ids:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - url_parameters: { id: '1' }
+                            - url_parameters: { id: '404' }
+                            - url_parameters: { id: '500' }
+                            - url_parameters: { id: '2' }
+                    outputs: [ request ]
+
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    error_strategy: skip
+                    options:
+                        client: wiremock
+                        url: '/books/{id}'
+                        method: 'GET'
+                    outputs: [ decode ]
+                    error_outputs: [ error ]
+
+                decode:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            json_decode: ~
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+
+                error:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    description: Receives the response body of the requests in error (error_outputs)

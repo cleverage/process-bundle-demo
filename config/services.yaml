@@ -81,6 +81,24 @@ services:
         tags:
             - { name: cleverage.rest.client }
 
+    # REST clients on the WireMock service (.docker/wiremock/), used by the demo.wiremock.* processes:
+    # the mocked "library" API, and the WireMock admin API (to reset / verify the received requests).
+    app.cleverage_rest_process.client.wiremock:
+        class: CleverAge\RestProcessBundle\Client\Client
+        bind:
+            $code: 'wiremock'
+            $uri: '%env(string:WIREMOCK_URL)%/api'
+        tags:
+            - { name: cleverage.rest.client }
+
+    app.cleverage_rest_process.client.wiremock_admin:
+        class: CleverAge\RestProcessBundle\Client\Client
+        bind:
+            $code: 'wiremock_admin'
+            $uri: '%env(string:WIREMOCK_URL)%/__admin'
+        tags:
+            - { name: cleverage.rest.client }
+
     # For cleverage/cache-process-bundle
     app.cleverage_cache_process.adapter.memory:
         class: App\Adapter\MemoryAdapter

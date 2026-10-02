@@ -1,0 +1,19 @@
+clever_age_process:
+    configurations:
+        demo.wiremock.fault:
+            description: >
+                WireMock: fault injection (fault-connection-reset.json): the connection is reset by the mocked server,
+                the request fails with a transport error and the process fails
+            help: >
+                Ex: bin/console cleverage:process:execute demo.wiremock.fault -v
+            tasks:
+                request:
+                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    options:
+                        client: wiremock
+                        url: '/unstable'
+                        method: 'GET'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
