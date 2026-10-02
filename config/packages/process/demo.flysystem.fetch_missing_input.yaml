@@ -1,0 +1,49 @@
+clever_age_process:
+    configurations:
+        demo.flysystem.fetch_missing_input:
+            description: >
+                FileFetchTask receiving a missing file with ignore_missing: true, the default
+                (cleverage/flysystem-process-bundle#39): the missing file must be skipped, the other ones copied
+            help: >
+                Ex: bin/console cleverage:process:execute demo.flysystem.fetch_missing_input && ls var/storage/fetch_source var/storage/fetch_destination
+            tasks:
+                clean:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    description: Empty both storages
+                    options:
+                        output:
+                            - '%kernel.project_dir%/var/storage/fetch_source'
+                            - '%kernel.project_dir%/var/storage/fetch_destination'
+                    outputs: [ remove_storages ]
+
+                remove_storages:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileRemoverTask'
+                    outputs: [ content ]
+
+                content:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'Some data'
+                    outputs: [ write_0 ]
+
+                write_0:
+                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    options:
+                        filename: '%kernel.project_dir%/var/storage/fetch_source/a.txt'
+                    outputs: [ inputs ]
+
+                inputs:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [ 'missing.txt', 'a.txt' ]
+                    outputs: [ task ]
+
+                task:
+                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    options:
+                        source_filesystem: 'local.storage.fetch_source'
+                        destination_filesystem: 'local.storage.fetch_destination'
+                    outputs: [ debug ]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
