@@ -46,6 +46,22 @@ x-base-mysql: &base-mysql
     MYSQL_USER: app
     MYSQL_PASSWORD: app
 
+# PostgreSQL, instead of MySQL (see docs/postgresql.md)
+#x-base-postgres: &base-postgres
+#  build:
+#    context: postgres
+#    args:
+#      UID: ${UID:-1000}
+#      GID: ${GID:-1000}
+#      POSTGRES_VERSION: ${POSTGRES_VERSION:-16}
+#  env_file: .env
+#  volumes:
+#    - process_bundle_demo_data:/var/lib/postgresql/data
+#  environment:
+#    POSTGRES_DB: app
+#    POSTGRES_USER: app
+#    POSTGRES_PASSWORD: app
+
 x-base-sftp: &base-sftp
   image: atmoz/sftp
   volumes:
@@ -62,8 +78,11 @@ services:
     <<: *base-php
     tty: true
     depends_on:
+      # PostgreSQL instead of MySQL (see docs/postgresql.md): comment mysql, uncomment postgres
       mysql:
         condition: service_healthy
+      #postgres:
+      #  condition: service_healthy
 
   apache2:
     <<: *base-apache2
@@ -80,6 +99,17 @@ services:
       retries: 100
     ports:
       - "${MYSQL_PORT:-3306}:3306"
+
+  # PostgreSQL instead of MySQL (see docs/postgresql.md): comment the mysql service above, uncomment this one
+  #postgres:
+  #  <<: *base-postgres
+  #  tty: true
+  #  healthcheck:
+  #    test: [ "CMD", "pg_isready", "-U", "app", "-d", "app" ]
+  #    timeout: 5s
+  #    retries: 100
+  #  ports:
+  #    - "${POSTGRES_PORT:-5432}:5432"
 
   sftp:
     <<: *base-sftp
