@@ -3,6 +3,9 @@ CleverAge/ProcessBundleDemo
 
 A demo project using cleverage/process-bundle & cleverage/*-process-bundle bridges
 
+The demo runs on MySQL by default. To run it on PostgreSQL, configure it before installing the project (first
+`make start`): see [running the demo on PostgreSQL](docs/postgresql.md).
+
 ## Documentation
 
 For usage documentation, see:

@@ -24,10 +24,12 @@ RUN set -eux; \
     libicu-dev \
     libzip-dev \
     libxml2-dev \
+    libpq-dev \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
         pdo \
         pdo_mysql \
+        pdo_pgsql \
         zip \
         soap \
     && docker-php-ext-enable soap
