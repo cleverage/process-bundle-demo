@@ -1,0 +1,33 @@
+clever_age_process:
+    configurations:
+        demo.ui.entity_manager_clear:
+            description: >
+                A process clearing the Doctrine entity manager shared with the UI (cleverage/ui-process-bundle#103):
+                the current process execution is detached. Without the fix, it is inserted again (a "started" execution
+                without logs and a duplicate "finish" one in the UI); with the fix, a single "finish" execution with all its logs.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.ui.entity_manager_clear
+            options:
+                ui:
+                    source: Foo
+                    target: Bar
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'before clear'
+                    outputs: [log_before]
+                log_before:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Log before the clear
+                        level: warning
+                    outputs: [clear]
+                clear:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\ClearEntityManagerTask'
+                    outputs: [log_after]
+                log_after:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Log after the clear
+                        level: warning
