@@ -1,0 +1,43 @@
+clever_age_process:
+    configurations:
+        demo.ui.entity_manager_closed:
+            description: >
+                A process closing the Doctrine entity manager shared with the UI (cleverage/ui-process-bundle#103): the
+                flush of an author whose last name is too long fails ("Data too long" on MySQL), Doctrine closes the
+                entity manager, the error is skipped and the process goes on. Without the fix, the process execution
+                stays "started" without end date nor logs in the UI; with the fix, a single "finish" execution with all
+                its logs.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.ui.entity_manager_closed
+            options:
+                ui:
+                    source: Foo
+                    target: Bar
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output:
+                            firstname: Too
+                            lastname: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+                    outputs: [log_before]
+                log_before:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Log before the failing flush
+                        level: warning
+                    outputs: [denormalize]
+                denormalize:
+                    service: '@CleverAge\ProcessBundle\Task\Serialization\DenormalizerTask'
+                    options:
+                        class: App\Entity\Author
+                    outputs: [save]
+                save:
+                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineWriterTask'
+                    error_strategy: skip
+                    outputs: [log_after]
+                log_after:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Log after the failing flush
+                        level: warning
