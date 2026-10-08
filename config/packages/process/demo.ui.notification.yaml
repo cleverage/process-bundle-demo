@@ -1,0 +1,27 @@
+clever_age_process:
+    configurations:
+        demo.ui.notification:
+            description: >
+                Notification of the end of a process execution (cleverage/ui-process-bundle#62): the process logs a
+                warning, so it finishes with a report ({"Warning": 1}) and the "finish_with_report" status is notified.
+                The notification is enabled by the process options (it is disabled by default) and sent with the
+                fakechat transport, which writes it in the logs ("notifier" channel).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.ui.notification -vv
+            options:
+                ui:
+                    source: Foo
+                    target: Bar
+                notification:
+                    enabled: true
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'data'
+                    outputs: [log]
+                log:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Warning counted in the report of the process execution
+                        level: warning
