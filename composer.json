@@ -19,9 +19,11 @@
         "league/flysystem-sftp-v3": "^3.0",
         "symfony/cache": "^6.4 || ^7.4 || ^8",
         "symfony/cache-contracts": "^3",
+        "symfony/fake-chat-notifier": "^6.4 || ^7.4 || ^8",
         "symfony/flex": "^v2.3",
         "symfony/framework-bundle": "^6.4 || ^7.4 || ^8",
         "symfony/http-kernel": "^6.4 || ^7.4 || ^8",
+        "symfony/notifier": "^6.4 || ^7.4 || ^8",
         "symfony/password-hasher": "^6.4 || ^7.4 || ^8",
         "symfony/scheduler": "^6.4 || ^7.4 || ^8"
     },

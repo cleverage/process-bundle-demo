@@ -1,0 +1,10 @@
+framework:
+    notifier:
+        chatter_transports:
+            # Notifications written in the logs ("notifier" channel), see the demo.ui.notification* processes
+            fakechat: '%env(FAKE_CHAT_DSN)%'
+        channel_policy:
+            urgent: ['chat/fakechat']
+            high: ['chat/fakechat']
+            medium: ['chat/fakechat']
+            low: ['chat/fakechat']

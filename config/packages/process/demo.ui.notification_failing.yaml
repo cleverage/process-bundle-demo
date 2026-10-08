@@ -1,0 +1,19 @@
+clever_age_process:
+    configurations:
+        demo.ui.notification_failing:
+            description: >
+                Notification of a failed process execution (cleverage/ui-process-bundle#62): the ConstantOutputTask
+                misses its required "output" option, the process fails and the "failed" status is notified, with the
+                error. The notification is enabled by the process options (it is disabled by default) and sent with
+                the fakechat transport, which writes it in the logs ("notifier" channel).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.ui.notification_failing -vv
+            options:
+                ui:
+                    source: Foo
+                    target: Bar
+                notification:
+                    enabled: true
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
