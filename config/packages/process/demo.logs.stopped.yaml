@@ -1,0 +1,20 @@
+clever_age_process:
+    configurations:
+        demo.logs.stopped:
+            description: >
+                A process stopped by a StopTask, without exception, logs "Process <code> failed"
+                (cleverage/process-bundle#157), here as warning instead of the global failed_level (debug)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.logs.stopped
+                (logs "Process demo.logs.stopped failed" as WARNING)
+            logs:
+                failed_level: warning
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: [ stop ]
+                    options:
+                        output: 'value'
+
+                stop:
+                    service: '@CleverAge\ProcessBundle\Task\StopTask'

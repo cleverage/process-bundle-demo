@@ -1,0 +1,16 @@
+clever_age_process:
+    configurations:
+        demo.logs.success_level:
+            description: >
+                Override the level of the "Process <code> succeed" log for this process only
+                (cleverage/process-bundle#157): it is logged as notice instead of the global success_level (info)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.logs.success_level -v
+                (logs "Process demo.logs.success_level succeed" as NOTICE)
+            logs:
+                success_level: notice
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: 'value'
