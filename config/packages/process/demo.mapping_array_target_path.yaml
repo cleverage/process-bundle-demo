@@ -1,0 +1,40 @@
+clever_age_process:
+    configurations:
+        demo.mapping_array_target_path:
+            description: >
+                Write target properties on an array destination with MappingTransformer
+                (cleverage/process-bundle#117): a simple name and the index notation are written as expected, while a
+                nested path ("address.city") creates a literal key and triggers a deprecation (it will throw in v6.0)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.mapping_array_target_path -vv
+                (outputs ['name' => 'John', 'address.city' => 'Lyon', 'address' => ['zip' => '69005'],
+                'contact.email' => 'john@example.com'], with a deprecation logged for "address.city")
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: [ transform ]
+                    options:
+                        output:
+                            name: John
+                            city: Lyon
+                            zip: '69005'
+                            email: john@example.com
+
+                transform:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: [ debug ]
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    name: # simple name: "name" key
+                                        code: '[name]'
+                                    address.city: # nested path: deprecated "address.city" literal key
+                                        code: '[city]'
+                                    '[address][zip]': # index notation: nested array
+                                        code: '[zip]'
+                                    '[contact.email]': # index notation: "contact.email" literal key
+                                        code: '[email]'
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
