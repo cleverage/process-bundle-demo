@@ -1,0 +1,56 @@
+clever_age_process:
+    generic_transformers:
+        demo_list_tag: # trim the value, then wrap it in a tag, using the list syntax
+            contextual_options:
+                tag:
+                    required: true
+            transformers:
+                - trim
+                - callback:
+                      callback: sprintf
+                      left_parameters: [ '<{{ tag }}>%%s</{{ tag }}>' ]
+    configurations:
+        demo.transformer_list:
+            description: >
+                Chain transformers with the list syntax (cleverage/process-bundle#94): the same transformer is used
+                several times without "#" suffix, a transformer without options is given by its code only, and the
+                syntax works in a TransformerTask, in the transformers of a mapped property and in a generic transformer
+            help: >
+                Ex: bin/console cleverage:process:execute demo.transformer_list
+                (outputs ['tags' => ['3', '2', '1'], 'name' => '<b>John</b>'])
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    outputs: [ transform ]
+                    options:
+                        output:
+                            tags: ' 1,,2,3 '
+                            name: '  John '
+
+                transform:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    outputs: [ debug ]
+                    options:
+                        transformers:
+                            - mapping:
+                                  mapping:
+                                      tags:
+                                          code: '[tags]'
+                                          transformers:
+                                              - trim
+                                              - explode:
+                                                    delimiter: ','
+                                              - callback:
+                                                    callback: array_filter
+                                              - callback:
+                                                    callback: array_reverse
+                                              - callback:
+                                                    callback: array_values
+                                      name:
+                                          code: '[name]'
+                                          transformers:
+                                              - demo_list_tag:
+                                                    tag: b
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
