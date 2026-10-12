@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns:g="http://base.google.com/ns/1.0">
+    <header>
+        <generated>2026-10-12</generated>
+    </header>
+    <products>
+        <product sku="BOOK-001">
+            <name>The Hobbit</name>
+            <g:price>12.90</g:price>
+            <!-- Nested element with the same name: part of BOOK-001, not iterated on its own -->
+            <bundle>
+                <product sku="BOOKMARK-001"/>
+            </bundle>
+        </product>
+        <product sku="BOOK-002">
+            <name>Dune</name>
+            <g:price>9.50</g:price>
+        </product>
+        <product sku="BOOK-003">
+            <name>Foundation</name>
+            <g:price>8.00</g:price>
+        </product>
+    </products>
+</catalog>

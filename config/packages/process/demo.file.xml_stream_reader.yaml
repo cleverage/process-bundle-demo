@@ -1,0 +1,28 @@
+clever_age_process:
+    configurations:
+        demo.file.xml_stream_reader:
+            description: >
+                Read a large XML file element by element (constant memory) with XmlStreamReaderTask: each <product>
+                element is output as a DOMElement and mapped with xpath queries, including a prefixed one (g:price,
+                whose namespace is declared on the root element). The nested <product> of BOOK-001 is not iterated
+            help: >
+                Ex: bin/console cleverage:process:execute demo.file.xml_stream_reader -vv
+            tasks:
+                read:
+                    service: '@CleverAge\ProcessBundle\Task\File\Xml\XmlStreamReaderTask'
+                    options:
+                        file_path: '%kernel.project_dir%/var/data/xml_stream_reader.xml'
+                        node_name: product
+                    outputs: [ transform ]
+                transform:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            xpath_evaluator:
+                                query:
+                                    sku: '@sku'
+                                    name: 'name/text()'
+                                    price: 'g:price/text()'
+                    outputs: [ dump ]
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
