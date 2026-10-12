@@ -1,0 +1,28 @@
+clever_age_process:
+    configurations:
+        demo.file.json_stream_writer_append:
+            description: >
+                JsonStreamWriterTask with mode "ab": the lines are appended to the JSON Lines file instead of
+                overwriting it (default "wb"), so each run adds two lines. The file is then read back with
+                JsonStreamReaderTask to dump every line written so far
+            help: >
+                Ex: bin/console cleverage:process:execute demo.file.json_stream_writer_append -vv
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output:
+                            - { event: start }
+                            - { event: end }
+                    outputs: [ write ]
+                write:
+                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamWriterTask'
+                    options:
+                        file_path: '%kernel.project_dir%/var/data/json_stream_writer_append.jsonl'
+                        mode: ab
+                    outputs: [ read ]
+                read:
+                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamReaderTask'
+                    outputs: [ dump ]
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
