@@ -1,0 +1,39 @@
+clever_age_process:
+    configurations:
+        demo.ui.stop:
+            description: >
+                Stop a running process from the UI (cleverage/ui-process-bundle#143, cleverage/process-bundle#266): the
+                process iterates over 60 items, waiting 1 second for each one. While it runs, click "Stop" in
+                "Process > Executions": it stops before its next item (the stop request is read every 5 seconds by
+                default, "process_execution.heartbeat_interval"), with the "stopped" status. Without stop request, it
+                runs for about 1 minute.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.ui.stop -vv (or launch it from the UI)
+            options:
+                ui:
+                    source: Foo
+                    target: Bar
+            tasks:
+                iterate:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        # 60 items: the number of microseconds to wait for each one
+                        output: [1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000,
+                                 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000,
+                                 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000,
+                                 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000,
+                                 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000,
+                                 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000]
+                    outputs: [wait]
+                wait:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback:
+                                callback: usleep
+                    outputs: [log]
+                log:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Item processed
+                        level: info
