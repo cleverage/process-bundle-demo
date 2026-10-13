@@ -1,0 +1,27 @@
+clever_age_process:
+    configurations:
+        demo.logs.retention:
+            description: >
+                Log retention of this process only (cleverage/ui-process-bundle#147): the "logs" option overrides the
+                bundle retention (logs.database_max_days / logs.file_max_days, null by default: kept). The
+                cleverage:ui-process:purge-logs command deletes its log records stored in database after 1 day, and its
+                log files (var/log/demo.logs.retention/<uuid>.log) after 7 days. The executions are kept.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.logs.retention
+                then bin/console cleverage:ui-process:purge-logs --dry-run (the logs of the executions older than the
+                retention are counted, run it without --dry-run to delete them)
+            options:
+                logs:
+                    database_max_days: 1
+                    file_max_days: 7
+            tasks:
+                iterate:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [one, two, three]
+                    outputs: [log]
+                log:
+                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    options:
+                        message: Item processed
+                        level: info
