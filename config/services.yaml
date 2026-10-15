@@ -44,7 +44,7 @@ services:
                 exceptions: true
                 features: !php/const SOAP_SINGLE_ELEMENT_ARRAYS
         tags:
-            - { name: cleverage.soap.client }
+            - { name: cleverage.soap.client, code: oorsprong_countryinfo }
 
     # Non-WSDL SOAP client pointing to a closed port: every call fails with a SoapFault.
     # Used by demo.soap.call_failure (cleverage/soap-process-bundle#25).
@@ -59,7 +59,7 @@ services:
                 exceptions: true
                 connection_timeout: 2
         tags:
-            - { name: cleverage.soap.client }
+            - { name: cleverage.soap.client, code: unreachable }
 
     # For cleverage/rest-process-bundle
     app.cleverage_rest_process.client.apicarto_ign:
@@ -68,7 +68,7 @@ services:
             $code: 'apicarto_ign'
             $uri: 'https://apicarto.ign.fr/api'
         tags:
-            - { name: cleverage.rest.client }
+            - { name: cleverage.rest.client, code: apicarto_ign }
 
     # SOAP clients (non-WSDL mode, urn:demo) on the WireMock service (stubs .docker/wiremock/mappings/soap-*.json).
     # The headers set by `calls` are sent with every call (cleverage/soap-process-bundle#29); the second client
@@ -84,7 +84,7 @@ services:
         calls:
             - [ setSoapHeaders, [ [ !service { class: SoapHeader, arguments: [ 'urn:demo', 'ClientToken', 'from-the-client-definition' ] } ] ] ]
         tags:
-            - { name: cleverage.soap.client }
+            - { name: cleverage.soap.client, code: wiremock }
 
     app.cleverage_soap_process.client.wiremock_no_exceptions:
         class: CleverAge\SoapProcessBundle\Client\Client
@@ -96,7 +96,7 @@ services:
                 uri: 'urn:demo'
                 exceptions: false
         tags:
-            - { name: cleverage.soap.client }
+            - { name: cleverage.soap.client, code: wiremock_no_exceptions }
 
     # REST client on an unresolvable host (.invalid TLD): every request fails with a transport error.
     # Used by demo.rest.transport_error (cleverage/rest-process-bundle#36).
@@ -106,7 +106,7 @@ services:
             $code: 'unreachable'
             $uri: 'https://unreachable.invalid/api'
         tags:
-            - { name: cleverage.rest.client }
+            - { name: cleverage.rest.client, code: unreachable }
 
     # REST clients on the WireMock service (.docker/wiremock/), used by the demo.wiremock.* processes:
     # the mocked "library" API, and the WireMock admin API (to reset / verify the received requests).
@@ -116,7 +116,7 @@ services:
             $code: 'wiremock'
             $uri: '%env(string:WIREMOCK_URL)%/api'
         tags:
-            - { name: cleverage.rest.client }
+            - { name: cleverage.rest.client, code: wiremock }
 
     app.cleverage_rest_process.client.wiremock_admin:
         class: CleverAge\RestProcessBundle\Client\Client
@@ -124,10 +124,10 @@ services:
             $code: 'wiremock_admin'
             $uri: '%env(string:WIREMOCK_URL)%/__admin'
         tags:
-            - { name: cleverage.rest.client }
+            - { name: cleverage.rest.client, code: wiremock_admin }
 
     # For cleverage/cache-process-bundle
     app.cleverage_cache_process.adapter.memory:
         class: App\Adapter\MemoryAdapter
         tags:
-            - { name: cleverage.cache.adapter }
+            - { name: cleverage.cache.adapter, code: memory }
