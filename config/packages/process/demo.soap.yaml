@@ -11,14 +11,14 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\SoapProcessBundle\Task\RequestTask'
+                    task: soap_request
                     error_strategy: 'stop'
                     options:
                         client: oorsprong_countryinfo
                         method: 'FullCountryInfoAllCountries'
                     outputs: [filter_europe]
                 filter_europe:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             property_accessor:
@@ -29,7 +29,7 @@ clever_age_process:
                                         sContinentCode: 'EU'
                     outputs: [phone_code, iso_code]
                 phone_code:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             array_map:
@@ -44,7 +44,7 @@ clever_age_process:
                                                 code: '[sCountryFlag]'
                     outputs: [debug]
                 iso_code:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             array_map:
@@ -59,4 +59,4 @@ clever_age_process:
                                                 code: '[sName]'
                     outputs: [debug]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

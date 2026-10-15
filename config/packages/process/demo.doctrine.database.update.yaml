@@ -19,7 +19,7 @@ clever_age_process:
                                 value: King
             tasks:
                 entry:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseUpdaterTask'
+                    task: doctrine_database_updater
                     options:
                         sql: 'update author set firstname = :firstname, lastname = :lastname'
                         input_as_params: false
@@ -29,4 +29,4 @@ clever_age_process:
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

@@ -11,7 +11,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    task: logger
                     options:
                         level: warning
                         message: DEMO LOGGER

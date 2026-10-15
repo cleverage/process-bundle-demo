@@ -37,7 +37,7 @@ _YAML samples and explanations_
 ```yaml
 # Task configuration level
 code:
-    service: '@service_ref'
+    task: task_code
     options: 
         a: 1
         b: 2

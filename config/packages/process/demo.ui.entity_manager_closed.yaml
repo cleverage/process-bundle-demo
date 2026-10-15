@@ -15,29 +15,29 @@ clever_age_process:
                     target: Bar
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output:
                             firstname: Too
                             lastname: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
                     outputs: [log_before]
                 log_before:
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    task: logger
                     options:
                         message: Log before the failing flush
                         level: warning
                     outputs: [denormalize]
                 denormalize:
-                    service: '@CleverAge\ProcessBundle\Task\Serialization\DenormalizerTask'
+                    task: denormalizer
                     options:
                         class: App\Entity\Author
                     outputs: [save]
                 save:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineWriterTask'
+                    task: doctrine_writer
                     error_strategy: skip
                     outputs: [log_after]
                 log_after:
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    task: logger
                     options:
                         message: Log after the failing flush
                         level: warning

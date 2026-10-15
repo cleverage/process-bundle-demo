@@ -8,7 +8,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.flysystem.fetch_missing_input && ls var/storage/fetch_source var/storage/fetch_destination
             tasks:
                 clean:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     description: Empty both storages
                     options:
                         output:
@@ -17,33 +17,33 @@ clever_age_process:
                     outputs: [ remove_storages ]
 
                 remove_storages:
-                    service: '@CleverAge\ProcessBundle\Task\File\FileRemoverTask'
+                    task: file_remover
                     outputs: [ content ]
 
                 content:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: 'Some data'
                     outputs: [ write_0 ]
 
                 write_0:
-                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    task: file_writer
                     options:
                         filename: '%kernel.project_dir%/var/storage/fetch_source/a.txt'
                     outputs: [ inputs ]
 
                 inputs:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output: [ 'missing.txt', 'a.txt' ]
                     outputs: [ task ]
 
                 task:
-                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    task: flysystem_file_fetch
                     options:
                         source_filesystem: 'local.storage.fetch_source'
                         destination_filesystem: 'local.storage.fetch_destination'
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

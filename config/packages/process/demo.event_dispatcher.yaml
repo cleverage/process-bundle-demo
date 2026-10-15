@@ -11,9 +11,9 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\Event\EventDispatcherTask'
+                    task: event_dispatcher
                     options:
                         event_name: 'myapp.myevent'
                     outputs: [ debug ]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

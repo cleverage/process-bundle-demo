@@ -7,16 +7,16 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.transformers_edge.slugify
             tasks:
                 extract:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: 'Hélène Dupont'
                     outputs: [ transform ]
                 transform:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             slugify:
                                 transliterator: 'Not-A-Real-Transliterator'
                     outputs: [ debug ]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

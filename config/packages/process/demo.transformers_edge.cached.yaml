@@ -7,12 +7,12 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.transformers_edge.cached
             tasks:
                 extract:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: 42
                     outputs: [ transform ]
                 transform:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             cached:
@@ -25,4 +25,4 @@ clever_age_process:
                                         type: string
                     outputs: [ debug ]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

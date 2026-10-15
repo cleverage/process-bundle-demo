@@ -8,7 +8,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.rest.url_parameter_int
             tasks:
                 request:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     options:
                         client: apicarto_ign
                         url: '/codes-postaux/communes/{codePostal}'
@@ -17,4 +17,4 @@ clever_age_process:
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

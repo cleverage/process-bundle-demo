@@ -11,7 +11,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    task: doctrine_reader
                     options:
                         class_name: 'App\Entity\Book'
                         criteria:
@@ -19,15 +19,15 @@ clever_age_process:
                     outputs: [dump]
 
                 dump:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
                     outputs: [remover]
 
                 remover:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineRemoverTask'
+                    task: doctrine_remover
                     outputs: [refetch]
 
                 refetch:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    task: doctrine_reader
                     options:
                         class_name: 'App\Entity\Book'
                         criteria:
@@ -35,4 +35,4 @@ clever_age_process:
                     outputs: [dumpnullid]
 
                 dumpnullid:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

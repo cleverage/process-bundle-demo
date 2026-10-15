@@ -8,7 +8,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.wiremock.path_templating
             tasks:
                 ids:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output:
                             - url_parameters: { id: '1' }
@@ -16,7 +16,7 @@ clever_age_process:
                     outputs: [ request ]
 
                 request:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     options:
                         client: wiremock
                         url: '/books/{id}'
@@ -24,11 +24,11 @@ clever_age_process:
                     outputs: [ decode ]
 
                 decode:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             json_decode: ~
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

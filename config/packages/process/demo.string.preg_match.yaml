@@ -11,13 +11,13 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     outputs: preg_match
                     options:
                         output: 'foobarbaz'
 
                 preg_match:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     outputs: debug
                     options:
                         transformers:
@@ -28,4 +28,4 @@ clever_age_process:
                                 property_path: '[2]'
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

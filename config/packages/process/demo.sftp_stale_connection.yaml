@@ -16,7 +16,7 @@ clever_age_process:
                 bin/console cleverage:process:execute demo.sftp_stale_connection -c filesystem:remote.storage.short_timeout
             tasks:
                 get_file:
-                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    task: flysystem_file_fetch
                     description: >
                         Fetch the source file from `{{ filesystem }}.incoming` (opens + caches the connection).
                         Iterable (file_pattern); fans out to treatment and archive_file (archive_file LAST).
@@ -28,7 +28,7 @@ clever_age_process:
                         ignore_missing: false
                     outputs: [treatment, debug, archive_file]
                 treatment:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     description: >
                         Long-running treatment placeholder (idle duration in seconds). Must exceed the server idle
                         threshold (sftp-short drops idle clients after ~6s).
@@ -36,16 +36,16 @@ clever_age_process:
                         output: 10
                     outputs: [treatment_sleep]
                 treatment_sleep:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     description: >
                         Keeps the cached connection idle (generic `sleep` transformer). Dead-end branch.
                     options:
                         transformers:
                             sleep: ~
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
                 archive_file:
-                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    task: flysystem_file_fetch
                     description: >
                         Archive by reading from `{{ filesystem }}.archive` - a DIFFERENT storage (deduced from the
                         base), so this opens a FRESH connection.
