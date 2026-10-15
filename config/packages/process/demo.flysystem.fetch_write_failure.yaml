@@ -12,33 +12,33 @@ clever_age_process:
                     target: Foo
             tasks:
                 content:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: 'Some important data'
                     outputs: [write_source]
 
                 write_source:
-                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    task: file_writer
                     description: The file to copy, in local.storage
                     options:
                         filename: '%local.storage.dir%/demo_fetch_write_failure.txt'
                     outputs: [block_destination]
 
                 block_destination:
-                    service: '@CleverAge\ProcessBundle\Task\File\FileWriterTask'
+                    task: file_writer
                     description: Creates a directory named like the file in local.storage.fetch_failure, so writing the file fails
                     options:
                         filename: '%kernel.project_dir%/var/storage/fetch_failure/demo_fetch_write_failure.txt/blocker'
                     outputs: [filename]
 
                 filename:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: 'demo_fetch_write_failure.txt'
                     outputs: [fetch]
 
                 fetch:
-                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    task: flysystem_file_fetch
                     options:
                         source_filesystem: 'local.storage'
                         destination_filesystem: 'local.storage.fetch_failure'
@@ -46,4 +46,4 @@ clever_age_process:
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

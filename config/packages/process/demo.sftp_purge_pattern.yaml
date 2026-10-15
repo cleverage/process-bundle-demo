@@ -15,7 +15,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 remove_pattern:
-                    service: '@CleverAge\FlysystemProcessBundle\Task\RemoveFileTask'
+                    task: flysystem_remove_file
                     options:
                         filesystem: '{{ filesystem }}'
                         file_pattern: '{{ file_pattern }}'

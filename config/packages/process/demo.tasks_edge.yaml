@@ -7,12 +7,12 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.tasks_edge.advanced_stat_counter -v
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output: [a, b, c]
                     outputs: [ stats ]
                 stats:
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\AdvancedStatCounterTask'
+                    task: advanced_stat_counter
                     options:
                         show_every: 1
 
@@ -23,17 +23,17 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.tasks_edge.iterable_batch_null
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output: [a, b, c]
                     outputs: [ batch ]
                 batch:
-                    service: '@CleverAge\ProcessBundle\Task\IterableBatchTask'
+                    task: iterable_batch
                     options:
                         batch_count: ~
                     outputs: [ debug ]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
 
         demo.tasks_edge.condition_scalar:
             description: >
@@ -42,12 +42,12 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.tasks_edge.condition_scalar
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: [a, b]
                     outputs: [ filter ]
                 filter:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             array_filter:
@@ -56,7 +56,7 @@ clever_age_process:
                                         '': a
                     outputs: [ debug ]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
 
         demo.tasks_edge.column_aggregator_null:
             description: >
@@ -65,14 +65,14 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.tasks_edge.column_aggregator_null
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: { a: x, b: ~ }
                     outputs: [ aggregate ]
                 aggregate:
-                    service: '@CleverAge\ProcessBundle\Task\ColumnAggregatorTask'
+                    task: column_aggregator
                     options:
                         columns: [a, b]
                     outputs: [ debug ]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

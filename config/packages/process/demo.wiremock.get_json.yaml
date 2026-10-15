@@ -8,7 +8,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.wiremock.get_json
             tasks:
                 request:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     options:
                         client: wiremock
                         url: '/books'
@@ -16,15 +16,15 @@ clever_age_process:
                     outputs: [ decode ]
 
                 decode:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             json_decode: ~
                     outputs: [ iterate ]
 
                 iterate:
-                    service: '@CleverAge\ProcessBundle\Task\InputIteratorTask'
+                    task: input_iterator
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

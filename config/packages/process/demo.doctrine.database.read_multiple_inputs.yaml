@@ -8,20 +8,20 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.doctrine.database.read_multiple_inputs
             tasks:
                 inputs:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output: [ 'first', 'second', 'third' ]
                     outputs: [ read ]
 
                 read:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseReaderTask'
+                    task: doctrine_database_reader
                     options:
                         sql: 'SELECT title FROM book ORDER BY id'
                         table: 'book'
                     outputs: [ title ]
 
                 title:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             property_accessor:
@@ -29,4 +29,4 @@ clever_age_process:
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

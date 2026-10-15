@@ -13,7 +13,7 @@ clever_age_process:
             tasks:
                 # Extracts archived_file.txt into <files_base_path>/backup/<files_base_path>/
                 unzip:
-                    service: '@CleverAge\ArchiveProcessBundle\Task\UnzipTask'
+                    task: archive_unzip
                     options:
                         filename: '%kernel.project_dir%/var/data/archive.zip'
                         destination: 'var/data/demo_zip_files_base_path/backup/var/data'
@@ -21,7 +21,7 @@ clever_age_process:
 
                 # UnzipTask outputs the destination directory (a string): replace it with the ZipTask input
                 zip_input:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             constant:
@@ -31,11 +31,11 @@ clever_age_process:
 
                 # Paths are relative to the project directory: expected entry "demo_zip_files_base_path/backup/var/data/archived_file.txt"
                 zip:
-                    service: '@CleverAge\ArchiveProcessBundle\Task\ZipTask'
+                    task: archive_zip
                     options:
                         filename: '%kernel.project_dir%/var/data/demo_zip_files_base_path.zip'
                         files_base_path: 'var/data'
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

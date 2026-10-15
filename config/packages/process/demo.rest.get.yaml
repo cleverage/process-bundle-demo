@@ -28,7 +28,7 @@ clever_age_process:
                                                         message: 'Le code postal doit être composé de 5 chiffres.'
             tasks:
                 entry:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     error_strategy: 'stop'
                     options:
                         client: apicarto_ign
@@ -37,15 +37,15 @@ clever_age_process:
                         url_parameters: { codePostal: '{{ codePostal }}' }
                     outputs: [json_decode]
                 json_decode:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             json_decode: ~
                     outputs: [dto]
                 dto:
-                    service: '@CleverAge\ProcessBundle\Task\Serialization\DenormalizerTask'
+                    task: denormalizer
                     options:
                         class: 'App\Dto\Commune[]'
                     outputs: [debug]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

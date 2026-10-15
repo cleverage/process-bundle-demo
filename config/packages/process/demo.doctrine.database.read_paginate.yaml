@@ -12,7 +12,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 read:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\Database\DatabaseReaderTask'
+                    task: doctrine_database_reader
                     options:
                         table: 'book'
                         sql: 'SELECT id FROM book ORDER BY id'
@@ -20,7 +20,7 @@ clever_age_process:
                     outputs: [ids]
 
                 ids:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             array_map:
@@ -32,4 +32,4 @@ clever_age_process:
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

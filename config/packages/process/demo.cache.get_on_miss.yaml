@@ -9,7 +9,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.cache.get_on_miss
             tasks:
                 keys:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output:
                             - key: 'key1'
@@ -18,7 +18,7 @@ clever_age_process:
                     outputs: [ get ]
 
                 get:
-                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    task: cache_get
                     options:
                         adapter: 'memory' # key is given by the input
                         on_miss: skip
@@ -26,10 +26,10 @@ clever_age_process:
                     error_outputs: [ compute ]
 
                 found:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
 
                 compute:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             mapping:
@@ -44,9 +44,9 @@ clever_age_process:
                     outputs: [ set, computed ]
 
                 set:
-                    service: '@CleverAge\CacheProcessBundle\Task\SetTask'
+                    task: cache_set
                     options:
                         adapter: 'memory' # key and value are given by the input
 
                 computed:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

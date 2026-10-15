@@ -11,7 +11,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output:
                             id: 123
@@ -20,4 +20,4 @@ clever_age_process:
                     outputs: [die]
 
                 die:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DieTask'
+                    task: die

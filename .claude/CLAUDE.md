@@ -52,7 +52,7 @@ Each config's `help:` line shows a concrete example. `-c key:"'value'"` injects 
 - **Model / lifecycle** (`src/Model/`): a process is a graph of tasks; each task is a service implementing `TaskInterface::execute(ProcessState $state)`. `ProcessState` is the data bus passed task-to-task — `getInput()`/`setOutput()`/`setErrorOutput()`, `stop()`, plus `getContext()` and `getContextualizedOption()` (the `-c key:value` values). Optional lifecycle interfaces refine a task: `IterableTaskInterface` (emit many outputs from one input), `BlockingTaskInterface` (wait for all inputs before proceeding), `Initializable/Flushable/FinalizableTaskInterface`, and `AbstractConfigurableTask` (OptionsResolver-based options).
 - **Tasks** (`src/Task/`): the generic building blocks referenced in configs — `ConstantOutputTask`, `TransformerTask`, `File/Csv/*`, `File/JsonStream/*`, `File/Xml|Yaml/*`, `Serialization/*` (normalize/denormalize/(de)serialize), `Validation/ValidatorTask`, `Debug/*` (`DebugTask`, `DieTask`, `StopwatchTask`, `ErrorForwarderTask`), `Reporting/*` (`LoggerTask`, stat counters), aggregators/iterators, and `Process/*` (run sub-processes or shell commands).
 - **Transformers** (`src/Transformer/`): the value-mapping library used inside `TransformerTask` and `generic_transformers` — `MappingTransformer`, `CallbackTransformer`, `CastTransformer`, `RulesTransformer`, `Array/*`, `String/*` (implode, explode, slugify, sprintf, preg_match…), `Date/*`, `Object/*`, `Serialization/*`, `Xml/XpathEvaluatorTransformer`.
-- **Registries** (`src/Registry/`): `ProcessConfigurationRegistry` and `TransformerRegistry` resolve the `@service` / transformer names used in YAML.
+- **Registries** (`src/Registry/`): `ProcessConfigurationRegistry` and `TransformerRegistry` resolve the process configurations and the transformer codes used in YAML; `TaskRegistry` resolves the task codes (`task: <code>`, declared by the `code` attribute of the `cleverage.task` tag or `#[AsTask]`).
 
 **Bridge bundles** each add a small set of tasks (`src/Task/`) plus a client/adapter concept wired in `config/services.yaml`:
 - `doctrine-process-bundle` — DB & entity tasks: `Database/DatabaseReaderTask`, `DatabaseUpdaterTask`, and `EntityManager/*` (`DoctrineReaderTask`, `DoctrineWriterTask`, `DoctrineBatchWriterTask`, cleaner/detacher/refresher/remover/clearer).
@@ -81,7 +81,7 @@ clever_age_process:
                                     #   entrypoint_type: file|text, default values, Symfony validation constraints)
             tasks:
                 <taskName>:
-                    service: '@CleverAge\ProcessBundle\Task\...'  # the task class, referenced as a service
+                    task: <code>               # the task code (e.g. transformer, debug, rest_request)
                     options: { ... }
                     outputs: [ <nextTask>, ... ]   # edges to downstream tasks (fan-out allowed)
                     error_strategy: stop|skip|...

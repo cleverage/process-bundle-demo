@@ -12,7 +12,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 zip:
-                    service: '@CleverAge\ArchiveProcessBundle\Task\ZipTask'
+                    task: archive_zip
                     options:
                         filename: '%kernel.project_dir%/var/data/missing_directory/demo_zip_write_failure.zip'
                         files: '%kernel.project_dir%/var/data/sample.txt'
@@ -20,4 +20,4 @@ clever_age_process:
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

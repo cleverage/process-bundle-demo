@@ -11,10 +11,10 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\DummyTask'
+                    task: dummy
                     outputs: [ output1, output2 ]
                 output1:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output:
                             id: 123
@@ -22,7 +22,7 @@ clever_age_process:
                             lastname: Test2
                     outputs: [ debug ]
                 output2:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output:
                             id: 456
@@ -30,4 +30,4 @@ clever_age_process:
                             lastname: Test4
                     outputs: [ debug ]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
