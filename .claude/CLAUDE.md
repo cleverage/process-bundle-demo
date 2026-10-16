@@ -65,6 +65,14 @@ Each config's `help:` line shows a concrete example. `-c key:"'value'"` injects 
 
 To find how a task behaves or what options it accepts, open its class under the relevant `vendor/cleverage/*/src/Task/` and its matching page under that bundle's `docs/reference/`.
 
+**Bundle tests: run them with coverage.** Bundle CI runs PHPUnit with pcov, and a missing `#[CoversClass]`/`#[UsesClass]` is only reported as risky when coverage is collected. The bundles' image has no pcov, so before pushing to a bundle run (from its checkout):
+
+```bash
+docker compose -f .docker/compose.yaml run --rm -T --user root php bash -c \
+  "apk add -q \$PHPIZE_DEPS linux-headers >/dev/null && pecl install pcov >/dev/null && docker-php-ext-enable pcov >/dev/null \
+   && php vendor/bin/phpunit --coverage-text | grep -E 'isky|^OK|FAIL|^  Lines:'; rm -rf .phpunit.cache/code-coverage"
+```
+
 ## How a process config works
 
 A process = a named graph of **tasks**. Read `config/packages/process/demo.transformer.yaml` first — it is the canonical, self-documenting example. Key structure:
