@@ -11,6 +11,6 @@ clever_age_process:
                 success_level: notice
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: 'value'

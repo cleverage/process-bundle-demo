@@ -8,4 +8,4 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.remover_null_input
             tasks:
                 remove:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineRemoverTask'
+                    task: doctrine_remover

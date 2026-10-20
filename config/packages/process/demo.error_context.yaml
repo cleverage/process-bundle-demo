@@ -7,12 +7,12 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.error_context.empty_iterable -vv
             tasks:
                 iterate:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output: []
                     outputs: [debug]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
 
         demo.error_context.property_setter:
             description: >
@@ -21,16 +21,16 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.error_context.property_setter -vv
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output:
                             name: Foo
                     outputs: [set]
                 set:
-                    service: '@CleverAge\ProcessBundle\Task\PropertySetterTask'
+                    task: property_setter
                     options:
                         values:
                             enabled: true # property path on an array: cannot be written
                     outputs: [debug]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

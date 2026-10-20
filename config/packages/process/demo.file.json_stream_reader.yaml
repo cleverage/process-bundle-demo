@@ -12,16 +12,16 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     outputs: read
                     options:
                         output:
                             file_path: '%kernel.project_dir%/var/data/json_stream_reader.json'
                 read:
-                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamReaderTask'
+                    task: json_stream_reader
                     outputs: dump
                     options:
                         spl_file_object_flags: []
                         json_flags: [] # no JSON_THROW_ON_ERROR: invalid lines are skipped
                 dump:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

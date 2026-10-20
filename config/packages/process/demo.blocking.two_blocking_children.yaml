@@ -9,16 +9,16 @@ clever_age_process:
                 Expected: two lines, "first: [1,2,3]" and "second: [1,2,3]"
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output: [1, 2, 3]
                     outputs: [first_aggregate, second_aggregate]
 
                 first_aggregate:
-                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    task: aggregate_iterable
                     outputs: [first_dump]
                 first_dump:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             callback: { callback: json_encode }
@@ -26,10 +26,10 @@ clever_age_process:
                     outputs: [debug]
 
                 second_aggregate:
-                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    task: aggregate_iterable
                     outputs: [second_dump]
                 second_dump:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             callback: { callback: json_encode }
@@ -37,4 +37,4 @@ clever_age_process:
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

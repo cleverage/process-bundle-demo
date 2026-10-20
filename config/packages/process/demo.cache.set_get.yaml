@@ -11,11 +11,11 @@ clever_age_process:
                     target: Foo
             tasks:
                 start:
-                    service: '@CleverAge\ProcessBundle\Task\DummyTask'
+                    task: dummy
                     outputs: [ data, get, get_missing ]
 
                 data:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     outputs: [ format ]
                     options:
                         output:
@@ -32,7 +32,7 @@ clever_age_process:
                               column2: null
                               column3: value3-3
                 format:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             mapping:
@@ -44,23 +44,23 @@ clever_age_process:
                     outputs: [ set ]
 
                 set:
-                    service: '@CleverAge\CacheProcessBundle\Task\SetTask'
+                    task: cache_set
                     options:
                         adapter: 'memory' # key and value are given by the input
 
                 get:
-                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    task: cache_get
                     options:
                         adapter: 'memory'
                         key: 'key2'
                     outputs: [ debug ]
 
                 get_missing:
-                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    task: cache_get
                     options:
                         adapter: 'memory'
                         key: 'missing'
                     outputs: [ debug ]
 
                 debug:
-                  service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                  task: debug

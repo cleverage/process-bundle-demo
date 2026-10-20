@@ -12,7 +12,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 inputs:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output:
                             - filename: '%kernel.project_dir%/var/data/demo_zip_multiple_inputs_1.zip'
@@ -22,10 +22,10 @@ clever_age_process:
                     outputs: [zip]
 
                 zip:
-                    service: '@CleverAge\ArchiveProcessBundle\Task\ZipTask'
+                    task: archive_zip
                     options:
                         files_base_path: '%kernel.project_dir%/var/data'
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

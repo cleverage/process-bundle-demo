@@ -8,7 +8,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.wiremock.verify_requests
             tasks:
                 reset:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     description: Reset the request journal (DELETE /__admin/requests)
                     options:
                         client: wiremock_admin
@@ -17,14 +17,14 @@ clever_age_process:
                     outputs: [ no_input_1 ]
 
                 no_input_1:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     description: The next request does not take the previous response as input
                     options:
                         output: { }
                     outputs: [ books ]
 
                 books:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     options:
                         client: wiremock
                         url: '/books'
@@ -32,13 +32,13 @@ clever_age_process:
                     outputs: [ no_input_2 ]
 
                 no_input_2:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: { }
                     outputs: [ book ]
 
                 book:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     options:
                         client: wiremock
                         url: '/books/1'
@@ -46,13 +46,13 @@ clever_age_process:
                     outputs: [ no_input_3 ]
 
                 no_input_3:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output: { }
                     outputs: [ count ]
 
                 count:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     description: Count the matching requests (POST /__admin/requests/count), outputs {"count":2}
                     options:
                         client: wiremock_admin
@@ -64,11 +64,11 @@ clever_age_process:
                     outputs: [ decode ]
 
                 decode:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             json_decode: ~
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

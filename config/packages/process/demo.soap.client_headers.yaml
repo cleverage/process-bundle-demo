@@ -9,7 +9,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.soap.client_headers
             tasks:
                 reset:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     description: Reset the WireMock request journal
                     options:
                         client: wiremock_admin
@@ -18,28 +18,28 @@ clever_age_process:
                     outputs: [ input ]
 
                 input:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output:
                             id: 1
                     outputs: [ request ]
 
                 request:
-                    service: '@CleverAge\SoapProcessBundle\Task\RequestTask'
+                    task: soap_request
                     options:
                         client: wiremock
                         method: 'GetBook'
                     outputs: [ no_input ]
 
                 no_input:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     description: The next request does not take the previous output as input
                     options:
                         output: { }
                     outputs: [ count ]
 
                 count:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     description: Count the SOAP requests sent with the ClientToken header, must output {"count":1}
                     options:
                         client: wiremock_admin
@@ -53,4 +53,4 @@ clever_age_process:
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

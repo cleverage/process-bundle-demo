@@ -11,10 +11,10 @@ clever_age_process:
                 failed_level: warning
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     outputs: [ stop ]
                     options:
                         output: 'value'
 
                 stop:
-                    service: '@CleverAge\ProcessBundle\Task\StopTask'
+                    task: stop

@@ -16,7 +16,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 copy:
-                    service: '@CleverAge\FlysystemProcessBundle\Task\FileFetchTask'
+                    task: flysystem_file_fetch
                     description: >
                         Download .csv files from remote.storage to local.storage.
                     outputs: aggregate
@@ -27,18 +27,18 @@ clever_age_process:
                         remove_source: true
                         ignore_missing: false
                 aggregate:
-                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    task: aggregate_iterable
                     description: >
                         Aggregate files previously downloaded. Then when all files are downloaded pass to read_local_dir
                         task to read each files one by one.
                     outputs: read_local_dir
                 read_local_dir:
-                    service: '@CleverAge\ProcessBundle\Task\File\FolderBrowserTask'
+                    task: folder_browser
                     outputs: log_local_file
                     options:
                         folder_path: '%local.storage.dir%'
                 log_local_file:
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    task: logger
                     options:
                         message: Read file.
                         level: info

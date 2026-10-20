@@ -11,7 +11,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output:
                             - author1:
@@ -25,30 +25,30 @@ clever_age_process:
                                 lastname: Lastname
                     outputs: [iterate]
                 iterate:
-                    service: '@CleverAge\ProcessBundle\Task\InputIteratorTask'
+                    task: input_iterator
                     outputs: [denormalizer]
                 denormalizer:
-                    service: '@CleverAge\ProcessBundle\Task\Serialization\DenormalizerTask'
+                    task: denormalizer
                     options:
                         class: App\Entity\Author
                     outputs: [batch_write]
                 batch_write:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineBatchWriterTask'
+                    task: doctrine_batch_writer
                     outputs: [aggregate_write]
                     options:
                         batch_count: 2
                 aggregate_write:
-                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    task: aggregate_iterable
                     outputs: [fetch]
                 fetch:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    task: doctrine_reader
                     options:
                         class_name: 'App\Entity\Author'
                         criteria:
                             lastname: 'Lastname'
                     outputs: [agregate_fetch]
                 agregate_fetch:
-                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    task: aggregate_iterable
                     outputs: [dump]
                 dump:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

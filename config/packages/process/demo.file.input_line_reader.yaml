@@ -11,17 +11,17 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\File\FolderBrowserTask'
+                    task: folder_browser
                     options:
                         folder_path: '%kernel.project_dir%/var/data'
                     outputs: read
                 read:
-                    service: '@CleverAge\ProcessBundle\Task\File\InputLineReaderTask'
+                    task: input_line_reader
                     outputs: [ log_line, dump ]
                 log_line:
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    task: logger
                     options:
                         message: Read line
                         level: info
                 dump:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
