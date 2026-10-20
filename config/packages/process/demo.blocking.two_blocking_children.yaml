@@ -1,0 +1,40 @@
+clever_age_process:
+    configurations:
+        demo.blocking.two_blocking_children:
+            description: >
+                An iterable task with two blocking children: both are proceeded, once, with all the items
+                (former "Known issue" of the README: only the last BlockingTask was proceeded)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.blocking.two_blocking_children
+                Expected: two lines, "first: [1,2,3]" and "second: [1,2,3]"
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [1, 2, 3]
+                    outputs: [first_aggregate, second_aggregate]
+
+                first_aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    outputs: [first_dump]
+                first_dump:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback: { callback: json_encode }
+                            sprintf: { format: 'first: %s' }
+                    outputs: [debug]
+
+                second_aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    outputs: [second_dump]
+                second_dump:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback: { callback: json_encode }
+                            sprintf: { format: 'second: %s' }
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

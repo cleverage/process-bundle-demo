@@ -1,0 +1,51 @@
+clever_age_process:
+    configurations:
+        demo.blocking.no_direct_iterable_ancestor:
+            description: >
+                Blocking tasks without a direct iterable ancestor: one after a non-iterable task following an
+                iterable one, one without any iterable ancestor. Both are proceeded (former "Known issue" of the
+                README: a BlockingTask was not proceeded without a direct IterableTask ancestor)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.blocking.no_direct_iterable_ancestor
+                Expected: two lines, "indirect: [\"item 1\",\"item 2\",\"item 3\"]" and "no iterable: [\"constant\"]"
+            tasks:
+                iterable:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [1, 2, 3]
+                    outputs: [format]
+                format:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            sprintf: { format: 'item %s' }
+                    outputs: [indirect_aggregate]
+                indirect_aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    outputs: [indirect_dump]
+                indirect_dump:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback: { callback: json_encode }
+                            sprintf: { format: 'indirect: %s' }
+                    outputs: [debug]
+
+                constant:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    options:
+                        output: constant
+                    outputs: [no_iterable_aggregate]
+                no_iterable_aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    outputs: [no_iterable_dump]
+                no_iterable_dump:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback: { callback: json_encode }
+                            sprintf: { format: 'no iterable: %s' }
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

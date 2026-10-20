@@ -1,0 +1,35 @@
+clever_age_process:
+    configurations:
+        demo.blocking.two_iterable_ancestors:
+            description: >
+                A blocking task with two direct iterable ancestors: it is proceeded once, with the items of both
+                (former "Known issue" of the README: a BlockingTask was proceeded as many times as it has direct
+                IterableTask ancestors)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.blocking.two_iterable_ancestors
+                Expected: a single line, "both: [1,2,3,4]"
+            tasks:
+                first_iterable:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [1, 2]
+                    outputs: [aggregate]
+                second_iterable:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [3, 4]
+                    outputs: [aggregate]
+
+                aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\AggregateIterableTask'
+                    outputs: [dump]
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback: { callback: json_encode }
+                            sprintf: { format: 'both: %s' }
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
