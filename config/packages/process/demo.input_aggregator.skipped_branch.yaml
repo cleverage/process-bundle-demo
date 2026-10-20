@@ -1,0 +1,56 @@
+clever_age_process:
+    configurations:
+        demo.input_aggregator.skipped_branch:
+            description: >
+                InputAggregatorTask when a branch skips an item: the item should be dropped, without mixing the inputs
+                of two items. branch_a (the first branch) skips the item 2, branch_b (the second branch) the item 4
+            help: >
+                Ex: bin/console cleverage:process:execute demo.input_aggregator.skipped_branch
+                Expected: three lines, {"a":"a1","b":"b1"}, {"a":"a3","b":"b3"} and {"a":"a5","b":"b5"}
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [1, 2, 3, 4, 5]
+                    outputs: [branch_a, branch_b]
+
+                branch_a:
+                    service: '@CleverAge\ProcessBundle\Task\FilterTask'
+                    options:
+                        not_match: { '': 2 }
+                    outputs: [format_a]
+                format_a:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            sprintf: { format: 'a%s' }
+                    outputs: [aggregate]
+
+                branch_b:
+                    service: '@CleverAge\ProcessBundle\Task\FilterTask'
+                    options:
+                        not_match: { '': 4 }
+                    outputs: [format_b]
+                format_b:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            sprintf: { format: 'b%s' }
+                    outputs: [aggregate]
+
+                aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\InputAggregatorTask'
+                    options:
+                        input_codes:
+                            format_a: a
+                            format_b: b
+                    outputs: [dump]
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback: { callback: json_encode }
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'

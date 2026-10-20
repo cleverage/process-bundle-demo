@@ -1,0 +1,45 @@
+clever_age_process:
+    configurations:
+        demo.input_aggregator.iterable:
+            description: >
+                InputAggregatorTask in an iterable process: for each item, the outputs of the two branches are
+                joined, keyed by branch
+            help: >
+                Ex: bin/console cleverage:process:execute demo.input_aggregator.iterable
+                Expected: three lines, {"a":"a1","b":"b1"}, {"a":"a2","b":"b2"} and {"a":"a3","b":"b3"}
+            tasks:
+                entry:
+                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    options:
+                        output: [1, 2, 3]
+                    outputs: [branch_a, branch_b]
+
+                branch_a:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            sprintf: { format: 'a%s' }
+                    outputs: [aggregate]
+                branch_b:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            sprintf: { format: 'b%s' }
+                    outputs: [aggregate]
+
+                aggregate:
+                    service: '@CleverAge\ProcessBundle\Task\InputAggregatorTask'
+                    options:
+                        input_codes:
+                            branch_a: a
+                            branch_b: b
+                    outputs: [dump]
+                dump:
+                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    options:
+                        transformers:
+                            callback: { callback: json_encode }
+                    outputs: [debug]
+
+                debug:
+                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
