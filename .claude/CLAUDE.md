@@ -99,9 +99,9 @@ clever_age_process:
 
 Tasks pass data along `outputs` edges. `TransformerTask` chains named **transformers** (mapping, callback, sprintf, slugify, array_map, cast, …). Bridge bundles contribute their own tasks (`RestProcessBundle\Task\RequestTask`, `SoapProcessBundle`, doctrine readers/writers, archive zip/unzip, sftp, cache).
 
-- **Generic transformers** (project-wide reusable transformer aliases like `uppercase`, `json_decode`, `substr`) are defined once in `config/packages/cleverage_process.yaml` under `clever_age_process.generic_transformers` and referenced by name in any process.
+- **Generic transformers** (project-wide reusable transformer aliases like `uppercase`, `json_decode`, `substr`) are defined once in `config/packages/clever_age_process.yaml` under `clever_age_process.generic_transformers` and referenced by name in any process.
 - `default_error_strategy: stop` is set globally there too.
-- All process files are auto-imported via `imports: [{ resource: process/ }]` in `cleverage_process.yaml`. Adding a new `demo.*.yaml` under `config/packages/process/` is enough to register a new process.
+- All process files are auto-imported via `imports: [{ resource: process/ }]` in `clever_age_process.yaml`. Adding a new `demo.*.yaml` under `config/packages/process/` is enough to register a new process.
 
 ## Wiring custom PHP into processes (`config/services.yaml`)
 

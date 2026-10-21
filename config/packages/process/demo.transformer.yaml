@@ -39,11 +39,11 @@ clever_age_process:
                                     firstname:
                                         code: '[firstname]'
                                         transformers:
-                                            uppercase: ~ # see config/packages/cleverage_process.yaml for generic transformers definitions
+                                            uppercase: ~ # see config/packages/clever_age_process.yaml for generic transformers definitions
                                     lastname:
                                         code: '[lastname]'
                                         transformers:
-                                            uppercase: ~ # see config/packages/cleverage_process.yaml for generic transformers definitions
+                                            uppercase: ~ # see config/packages/clever_age_process.yaml for generic transformers definitions
                                     sprintf_one:
                                         code: '[firstname]'
                                         transformers:
