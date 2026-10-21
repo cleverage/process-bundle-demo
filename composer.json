@@ -73,7 +73,7 @@
     "prefer-stable": true,
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "7.4.*"
         }
     }
