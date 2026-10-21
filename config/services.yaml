@@ -126,8 +126,9 @@ services:
         tags:
             - { name: cleverage.rest.client, code: wiremock_admin }
 
-    # For cleverage/cache-process-bundle
-    app.cleverage_cache_process.adapter.memory:
-        class: App\Adapter\MemoryAdapter
+    # For cleverage/cache-process-bundle: a Symfony cache pool tagged directly, wrapped in an adapter by the bundle
+    app.cache.memory:
+        parent: cache.adapter.array
         tags:
+            - { name: cache.pool }
             - { name: cleverage.cache.adapter, code: memory }
