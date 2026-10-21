@@ -3,32 +3,27 @@ parameters:
 flysystem:
   storages:
     local.storage:
-      adapter: 'local'
-      options:
+      local:
         directory: '%local.storage.dir%'
 
     # Local storage whose target path is a directory: writing a file there fails.
     # Used by demo.flysystem.fetch_write_failure (cleverage/flysystem-process-bundle#35).
     local.storage.fetch_failure:
-      adapter: 'local'
-      options:
+      local:
         directory: '%kernel.project_dir%/var/storage/fetch_failure'
 
     # Source and destination storages of the FileFetchTask / RemoveFileTask demos
     # (demo.flysystem.fetch_* / demo.flysystem.remove_*), emptied by each demo.
     local.storage.fetch_source:
-      adapter: 'local'
-      options:
+      local:
         directory: '%kernel.project_dir%/var/storage/fetch_source'
 
     local.storage.fetch_destination:
-      adapter: 'local'
-      options:
+      local:
         directory: '%kernel.project_dir%/var/storage/fetch_destination'
 
     remote.storage:
-      adapter: 'sftp'
-      options:
+      sftp:
         host: '%env(string:SFTP_HOST)%'
         port: 22
         username: '%env(string:SFTP_USERNAME)%'
@@ -40,8 +35,7 @@ flysystem:
     # <base>.archive convention. Because OpenSSH closes the idle transport cleanly,
     # this yields "Connection closed prematurely". Used by demo.sftp_stale_connection.
     remote.storage.short_timeout.incoming:
-      adapter: 'sftp'
-      options:
+      sftp:
         host: '%env(string:SFTP_SHORT_HOST)%'
         port: 22
         username: '%env(string:SFTP_USERNAME)%'
@@ -50,8 +44,7 @@ flysystem:
         connectivityChecker: App\Flysystem\SftpConnectivityChecker
 
     remote.storage.short_timeout.archive:
-      adapter: 'sftp'
-      options:
+      sftp:
         host: '%env(string:SFTP_SHORT_HOST)%'
         port: 22
         username: '%env(string:SFTP_USERNAME)%'
@@ -66,8 +59,7 @@ flysystem:
     # SftpConnectionProvider (its OWN phpseclib connection). This yields the VERBATIM
     # issue #24 error. Used by demo.sftp_fetch_archive_timeout.
     remote.storage.mock.incoming:
-      adapter: 'sftp'
-      options:
+      sftp:
         host: '%env(string:SFTP_MOCK_HOST)%'
         port: 22
         username: '%env(string:SFTP_USERNAME)%'
@@ -76,8 +68,7 @@ flysystem:
         connectivityChecker: App\Flysystem\SftpConnectivityChecker
 
     remote.storage.mock.archive:
-      adapter: 'sftp'
-      options:
+      sftp:
         host: '%env(string:SFTP_MOCK_HOST)%'
         port: 22
         username: '%env(string:SFTP_USERNAME)%'
