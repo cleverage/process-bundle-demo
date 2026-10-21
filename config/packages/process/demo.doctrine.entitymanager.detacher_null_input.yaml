@@ -8,4 +8,4 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.detacher_null_input
             tasks:
                 detach:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineDetacherTask'
+                    task: doctrine_detacher

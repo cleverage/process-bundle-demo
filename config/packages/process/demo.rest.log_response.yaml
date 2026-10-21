@@ -8,14 +8,14 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.rest.log_response -vv
             tasks:
                 input:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     options:
                         output:
                             url: '/codes-postaux/communes/46800'
                     outputs: [ request ]
 
                 request:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     options:
                         client: apicarto_ign
                         url: '/configured/url'
@@ -24,4 +24,4 @@ clever_age_process:
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

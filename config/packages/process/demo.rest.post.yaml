@@ -11,7 +11,7 @@ clever_age_process:
                     target: Foo
             tasks:
                 entry:
-                    service: '@CleverAge\RestProcessBundle\Task\RequestTask'
+                    task: rest_request
                     error_strategy: 'stop'
                     options:
                         client: apicarto_ign
@@ -23,10 +23,10 @@ clever_age_process:
                                 coordinates: [-1.691634,48.104237]
                     outputs: [json_decode]
                 json_decode:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             json_decode: ~
                     outputs: [debug]
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

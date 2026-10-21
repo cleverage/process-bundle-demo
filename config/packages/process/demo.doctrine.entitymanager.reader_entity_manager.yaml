@@ -8,11 +8,11 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_entity_manager
             tasks:
                 read:
-                    service: '@CleverAge\DoctrineProcessBundle\Task\EntityManager\DoctrineReaderTask'
+                    task: doctrine_reader
                     options:
                         class_name: 'App\Entity\Book'
                         entity_manager: 'unknown'
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

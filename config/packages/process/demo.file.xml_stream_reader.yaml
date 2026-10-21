@@ -9,13 +9,13 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.file.xml_stream_reader -vv
             tasks:
                 read:
-                    service: '@CleverAge\ProcessBundle\Task\File\Xml\XmlStreamReaderTask'
+                    task: xml_stream_reader
                     options:
                         file_path: '%kernel.project_dir%/var/data/xml_stream_reader.xml'
                         node_name: product
                     outputs: [ transform ]
                 transform:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             xpath_evaluator:
@@ -25,4 +25,4 @@ clever_age_process:
                                     price: 'g:price/text()'
                     outputs: [ dump ]
                 dump:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

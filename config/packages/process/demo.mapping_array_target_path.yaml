@@ -11,7 +11,7 @@ clever_age_process:
                 'contact.email' => 'john@example.com'], with a deprecation logged for "address.city")
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     outputs: [ transform ]
                     options:
                         output:
@@ -21,7 +21,7 @@ clever_age_process:
                             email: john@example.com
 
                 transform:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     outputs: [ debug ]
                     options:
                         transformers:
@@ -37,4 +37,4 @@ clever_age_process:
                                         code: '[email]'
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

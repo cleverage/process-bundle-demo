@@ -20,7 +20,7 @@ clever_age_process:
                 (outputs ['tags' => ['3', '2', '1'], 'name' => '<b>John</b>'])
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantOutputTask'
+                    task: constant_output
                     outputs: [ transform ]
                     options:
                         output:
@@ -28,7 +28,7 @@ clever_age_process:
                             name: '  John '
 
                 transform:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     outputs: [ debug ]
                     options:
                         transformers:
@@ -53,4 +53,4 @@ clever_age_process:
                                                     tag: b
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

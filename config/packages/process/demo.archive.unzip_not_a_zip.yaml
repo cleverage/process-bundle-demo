@@ -12,11 +12,11 @@ clever_age_process:
                     target: Foo
             tasks:
                 unzip:
-                    service: '@CleverAge\ArchiveProcessBundle\Task\UnzipTask'
+                    task: archive_unzip
                     options:
                         filename: '%kernel.project_dir%/var/data/sample.txt'
                         destination: '%kernel.project_dir%/var/data/unzip_archive'
                     outputs: [debug]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

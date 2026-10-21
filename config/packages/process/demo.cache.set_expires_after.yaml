@@ -8,7 +8,7 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.cache.set_expires_after
             tasks:
                 set:
-                    service: '@CleverAge\CacheProcessBundle\Task\SetTask'
+                    task: cache_set
                     options:
                         adapter: 'memory'
                         key: 'short_lived'
@@ -17,7 +17,7 @@ clever_age_process:
                     outputs: [ get_before, wait ]
 
                 get_before:
-                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    task: cache_get
                     options:
                         adapter: 'memory'
                         key: 'short_lived'
@@ -25,7 +25,7 @@ clever_age_process:
                     outputs: [ debug ]
 
                 wait:
-                    service: '@CleverAge\ProcessBundle\Task\TransformerTask'
+                    task: transformer
                     options:
                         transformers:
                             constant:
@@ -34,11 +34,11 @@ clever_age_process:
                     outputs: [ get_after ]
 
                 get_after:
-                    service: '@CleverAge\CacheProcessBundle\Task\GetTask'
+                    task: cache_get
                     options:
                         adapter: 'memory'
                         key: 'short_lived'
                     outputs: [ debug ]
 
                 debug:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

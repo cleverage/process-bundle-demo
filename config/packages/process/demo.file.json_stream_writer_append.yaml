@@ -9,20 +9,20 @@ clever_age_process:
                 Ex: bin/console cleverage:process:execute demo.file.json_stream_writer_append -vv
             tasks:
                 entry:
-                    service: '@CleverAge\ProcessBundle\Task\ConstantIterableOutputTask'
+                    task: constant_iterable_output
                     options:
                         output:
                             - { event: start }
                             - { event: end }
                     outputs: [ write ]
                 write:
-                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamWriterTask'
+                    task: json_stream_writer
                     options:
                         file_path: '%kernel.project_dir%/var/data/json_stream_writer_append.jsonl'
                         mode: ab
                     outputs: [ read ]
                 read:
-                    service: '@CleverAge\ProcessBundle\Task\File\JsonStream\JsonStreamReaderTask'
+                    task: json_stream_reader
                     outputs: [ dump ]
                 dump:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug

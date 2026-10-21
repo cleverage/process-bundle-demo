@@ -31,22 +31,22 @@ clever_age_process:
                                                           message: delimiter context must be , or ;. {{ value }} given.
             tasks:
                 entrypoint: # Add log info to describe which file is reading
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    task: logger
                     options:
                         message: Read file
                         level: info
                         context: [ 'input' ]
                     outputs: [ read ]
                 read:
-                    service: '@CleverAge\ProcessBundle\Task\File\Csv\InputCsvReaderTask'
+                    task: input_csv_reader
                     outputs: [ log_line, dump ]
                     options:
                         delimiter: '{{ delimiter }}' ## delimiter is contextualized you must add -c delimiter:";" on console execute
                 log_line:
-                    service: '@CleverAge\ProcessBundle\Task\Reporting\LoggerTask'
+                    task: logger
                     options:
                         message: Read line
                         level: info
                         context: [ 'input' ]
                 dump:
-                    service: '@CleverAge\ProcessBundle\Task\Debug\DebugTask'
+                    task: debug
