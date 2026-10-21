@@ -65,11 +65,13 @@ Each config's `help:` line shows a concrete example. `-c key:"'value'"` injects 
 
 To find how a task behaves or what options it accepts, open its class under the relevant `vendor/cleverage/*/src/Task/` and its matching page under that bundle's `docs/reference/`.
 
-**Bundle tests: run them with coverage.** Bundle CI runs PHPUnit with pcov, and a missing `#[CoversClass]`/`#[UsesClass]` is only reported as risky when coverage is collected. The bundles' image has no pcov, so before pushing to a bundle run (from its checkout):
+**Bundle tests: run them with coverage.** Bundle CI runs PHPUnit with pcov, and a missing `#[CoversClass]`/`#[UsesClass]` is only reported as risky when coverage is collected. The bundles' image has no pcov, so before pushing to a bundle run (from its checkout). pcov is built from its GitHub tarball: `pecl install pcov` fails (PECL download/REST errors).
 
 ```bash
 docker compose -f .docker/compose.yaml run --rm -T --user root php bash -c \
-  "apk add -q \$PHPIZE_DEPS linux-headers >/dev/null && pecl install pcov >/dev/null && docker-php-ext-enable pcov >/dev/null \
+  "apk add -q \$PHPIZE_DEPS linux-headers >/dev/null \
+   && (cd /tmp && curl -sSL https://github.com/krakjoe/pcov/archive/refs/tags/v1.0.12.tar.gz | tar xz && cd pcov-1.0.12 \
+       && phpize && ./configure && make -j4 && make install) >/dev/null 2>&1 && docker-php-ext-enable pcov >/dev/null \
    && php vendor/bin/phpunit --coverage-text | grep -E 'isky|^OK|FAIL|^  Lines:'; rm -rf .phpunit.cache/code-coverage"
 ```
 
