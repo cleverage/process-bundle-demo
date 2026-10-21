@@ -105,7 +105,7 @@ Tasks pass data along `outputs` edges. `TransformerTask` chains named **transfor
 
 ## Wiring custom PHP into processes (`config/services.yaml`)
 
-The `_instanceof` rules auto-tag anything implementing `TaskInterface` (public, non-shared, logged) or `TransformerInterface` (tagged `cleverage.transformer`). To expose external clients/adapters to processes you register a service with the right tag — see existing examples in `services.yaml`:
+`autoconfigure: true` is enough for a custom task or transformer: process-bundle (5.4+) autoconfigures anything implementing `TaskInterface` (non-shared, logged) or `TransformerInterface` (tagged `cleverage.transformer`); give it a code with `#[AsTask(code: '...')]` / `#[AsTransformer(code: '...')]`. To expose external clients/adapters to processes you register a service with the right tag — see existing examples in `services.yaml`:
 - SOAP client → tag `cleverage.soap.client` (referenced by `code` in soap tasks)
 - REST client → tag `cleverage.rest.client`
 - Cache adapter → tag `cleverage.cache.adapter` (a Symfony cache pool can be tagged directly, see `app.cache.memory`)
