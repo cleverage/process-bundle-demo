@@ -11,10 +11,6 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-if (!file_exists(__DIR__.'/src')) {
-    exit(0);
-}
-
 $fileHeaderComment = <<<'EOF'
     This file is part of the CleverAge/ProcessBundleDemo package.
 
@@ -41,8 +37,15 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setFinder(
         (new PhpCsFixer\Finder())
-            ->in(__DIR__.'/src')
-//            ->in(__DIR__.'/tests')
+            ->in(__DIR__)
+            ->exclude(['var', 'migrations'])
+            ->notPath([
+                'config/bundles.php',
+                'config/preload.php',
+                'config/reference.php',
+                'public/index.php',
+                'tests/bootstrap.php',
+            ])
             ->append([__FILE__])
     )
     ->setCacheFile('.php-cs-fixer.cache')
