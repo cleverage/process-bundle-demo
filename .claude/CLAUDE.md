@@ -60,7 +60,7 @@ Each config's `help:` line shows a concrete example. `-c key:"'value'"` injects 
 - `soap-process-bundle` — `Task/RequestTask` driven by a tagged `cleverage.soap.client` (see `oorsprong_countryinfo` client).
 - `flysystem-process-bundle` — `FileFetchTask`, `ListContentTask`, `RemoveFileTask` over Flysystem storages (config in `config/packages/flysystem.yaml`); the demo also uses SFTP.
 - `archive-process-bundle` — `ZipTask` / `UnzipTask`.
-- `cache-process-bundle` — `GetTask` / `SetTask` backed by a tagged `cleverage.cache.adapter` (see `src/Adapter/MemoryAdapter.php`).
+- `cache-process-bundle` — `GetTask` / `SetTask` backed by a tagged `cleverage.cache.adapter` (see the `app.cache.memory` pool in `services.yaml`).
 - `ui-process-bundle` (v3) — the **web UI** at `/process` (no process tasks). Built on EasyAdmin: dashboard, process list/launch/upload-and-run actions, `User` auth, and it **persists every run** — `ProcessExecution`, `LogRecord`, `ProcessSchedule` entities. Its Doctrine migrations ship in the bundle (`vendor/cleverage/ui-process-bundle/src/Migrations/`), which is why `make doctrine/migrations` creates those tables. It also provides the Scheduler integration behind `src/Schedule.php`.
 
 To find how a task behaves or what options it accepts, open its class under the relevant `vendor/cleverage/*/src/Task/` and its matching page under that bundle's `docs/reference/`.
@@ -108,7 +108,7 @@ Tasks pass data along `outputs` edges. `TransformerTask` chains named **transfor
 The `_instanceof` rules auto-tag anything implementing `TaskInterface` (public, non-shared, logged) or `TransformerInterface` (tagged `cleverage.transformer`). To expose external clients/adapters to processes you register a service with the right tag — see existing examples in `services.yaml`:
 - SOAP client → tag `cleverage.soap.client` (referenced by `code` in soap tasks)
 - REST client → tag `cleverage.rest.client`
-- Cache adapter → tag `cleverage.cache.adapter` (see `src/Adapter/MemoryAdapter.php`)
+- Cache adapter → tag `cleverage.cache.adapter` (a Symfony cache pool can be tagged directly, see `app.cache.memory`)
 
 ## Domain glue in `src/`
 
