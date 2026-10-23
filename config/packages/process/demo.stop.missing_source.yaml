@@ -1,0 +1,44 @@
+clever_age_process:
+    configurations:
+        demo.stop.missing_source:
+            description: >
+                Stops the process on purpose, without failure, when the source file does not exist (StopTask,
+                cleverage/process-bundle#337): the process ends as stopped ("Process demo.stop.missing_source stopped"
+                log, "stopped" status in the UI), otherwise the file is read
+            help: >
+                Ex: bin/console cleverage:process:execute demo.stop.missing_source -c source:"'var/data/missing.csv'"
+                (stopped) or -c source:"'var/data/sample.csv'" (read)
+            tasks:
+                source_path:
+                    task: constant_output
+                    options:
+                        output: '{{ source }}'
+                    outputs: [ source_exists ]
+
+                source_exists:
+                    task: transformer
+                    options:
+                        transformers:
+                            callback:
+                                callback: file_exists
+                    outputs: [ check_source ]
+
+                check_source:
+                    task: filter
+                    options:
+                        match:
+                            '': true
+                    outputs: [ read ]
+                    error_outputs: [ stop ]
+
+                stop:
+                    task: stop
+
+                read:
+                    task: csv_reader
+                    options:
+                        file_path: '{{ source }}'
+                    outputs: [ debug ]
+
+                debug:
+                    task: debug
