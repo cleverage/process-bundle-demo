@@ -94,7 +94,7 @@ clever_age_process:
                     task: <code>               # the task code (e.g. transformer, debug, rest_request)
                     options: { ... }
                     outputs: [ <nextTask>, ... ]   # edges to downstream tasks (fan-out allowed)
-                    error_strategy: stop|skip|...
+                    error_strategy: stop|skip
 ```
 
 Tasks pass data along `outputs` edges. `TransformerTask` chains named **transformers** (mapping, callback, sprintf, slugify, array_map, cast, …). Bridge bundles contribute their own tasks (`RestProcessBundle\Task\RequestTask`, `SoapProcessBundle`, doctrine readers/writers, archive zip/unzip, sftp, cache).
