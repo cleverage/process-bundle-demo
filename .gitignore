@@ -9,7 +9,15 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/var/
+/var/*
+# Input files of the demo processes
+!/var/data/
+/var/data/*
+!/var/data/archive.zip
+!/var/data/json_stream_reader.json
+!/var/data/sample.csv
+!/var/data/sample.txt
+!/var/data/xml_stream_reader.xml
 /vendor/
 ###< symfony/framework-bundle ###
 
