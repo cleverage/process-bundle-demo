@@ -26,7 +26,7 @@ down: #[Docker] Down containers
 	$(DOCKER_COMPOSE) down
 
 build: #[Docker] Build containers
-	$(DOCKER_COMPOSE) build
+	$(DOCKER_COMPOSE) build --pull
 
 ps: # [Docker] Show running containers
 	$(DOCKER_COMPOSE) ps
