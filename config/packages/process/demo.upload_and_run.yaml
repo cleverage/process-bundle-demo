@@ -11,24 +11,24 @@ clever_age_process:
                     ui_launch_mode: form
                     source: Foo
                     target: Bar
-                    entrypoint_type: file
-                    default: ## set default values to UI launch form
-                        #input: /var/wwww ###ignored because entrypoint_type is set to file
+                    form:
+                        input:
+                            type: Symfony\Component\Form\Extension\Core\Type\FileType
+                            options:
+                                constraints:
+                                    - File:
+                                          # A CSV file is often detected as "text/plain": allow it explicitly
+                                          extensions:
+                                              csv: ['text/csv', 'text/plain', 'application/csv', 'text/x-csv', 'text/x-comma-separated-values']
                         context:
-                            - key: delimiter  # allow to change delimiter via UI form
-                              value: ,
-                    constraints: ## constraint to apply on the form
-                        - Collection:
-                              fields:
-                                  input:
-                                      - File: ~
-                                  context:
-                                      - Collection:
-                                            fields:
-                                                delimiter:
-                                                    - Choice:
-                                                          choices: [',', ';']
-                                                          message: delimiter context must be , or ;. {{ value }} given.
+                            # Injected in the "delimiter" option of the CSV reader ({{ delimiter }})
+                            delimiter:
+                                type: Symfony\Component\Form\Extension\Core\Type\ChoiceType
+                                default: ','
+                                options:
+                                    choices: { 'Comma (,)': ',', 'Semicolon (;)': ';' }
+                                    required: true
+                        allow_extra_context: false
             tasks:
                 entrypoint: # Add log info to describe which file is reading
                     task: logger

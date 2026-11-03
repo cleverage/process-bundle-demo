@@ -92,8 +92,9 @@ clever_age_process:
             help: ...               # example invocation
             entry_point: <task>     # required when input is fed in (e.g. file upload)
             options:
-                ui: { ... }         # controls the UiProcessBundle launch form (ui_launch_mode: form,
-                                    #   entrypoint_type: file|text, default values, Symfony validation constraints)
+                ui: { ... }         # controls the UiProcessBundle launch form (ui_launch_mode: form, then
+                                    #   form: input / context fields with type, options incl. constraints, default;
+                                    #   entrypoint_type / default / constraints are deprecated since ui 3.5)
             tasks:
                 <taskName>:
                     task: <code>               # the task code (e.g. transformer, debug, rest_request)
