@@ -1,0 +1,21 @@
+clever_age_process:
+    configurations:
+        demo.ui.execution_user:
+            description: >
+                Reproduction (cleverage/ui-process-bundle#256): the launch form adds the email of the connected user to
+                the process context, under the "execution_user" key, but a free context pair "execution_user" of the
+                form replaced it.
+            help: >
+                Ex (UI): Process > demo.ui.execution_user > Launch, add the context pair "execution_user" /
+                "someone@else", then submit. Expected (fixed in cleverage/ui-process-bundle#256): a validation error
+                on the key, the "execution_user" context key being reserved (before the fix, the log of the execution
+                said "Launched by someone@else"). Without this pair, it says "Launched by" the connected user.
+            options:
+                ui:
+                    ui_launch_mode: form
+            tasks:
+                log:
+                    task: logger
+                    options:
+                        level: info
+                        message: 'Launched by {{ execution_user }}'
