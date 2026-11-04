@@ -4,7 +4,7 @@ clever_age_process:
             description: >
                 A simple process to use DoctrineProcessBundle as entity reader (then clear the entitymanager)
             help: >
-                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_clear
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.reader_clearer
             options:
                 ui:
                     source: Bar
