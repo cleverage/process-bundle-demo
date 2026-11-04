@@ -1,0 +1,68 @@
+clever_age_process:
+    configurations:
+        demo.transformer.ignore_missing_non_array_input:
+            description: >
+                Reproduction (audit v3, "to confirm"): does "ignore_missing" of the mapping and property_accessor
+                transformers cover an input that is null or a scalar, and not an array or an object?
+            help: >
+                Ex: bin/console cleverage:process:execute demo.transformer.ignore_missing_non_array_input -vv
+                Expected: each input gives null values (missing property ignored), the array input gives "x".
+            tasks:
+                inputs:
+                    task: constant_iterable_output
+                    options:
+                        output:
+                            - ~
+                            - abc
+                            - 42
+                            - { name: x }
+                    outputs: [ mapping_index, mapping_property, property_accessor_index, property_accessor_property ]
+
+                # Index notation ([name]): for an array
+                mapping_index:
+                    task: transformer
+                    error_strategy: skip
+                    options:
+                        transformers:
+                            mapping:
+                                ignore_missing: true
+                                mapping:
+                                    name:
+                                        code: '[name]'
+                    outputs: [ debug ]
+
+                # Property notation (name): for an object
+                mapping_property:
+                    task: transformer
+                    error_strategy: skip
+                    options:
+                        transformers:
+                            mapping:
+                                ignore_missing: true
+                                mapping:
+                                    name:
+                                        code: name
+                    outputs: [ debug ]
+
+                property_accessor_index:
+                    task: transformer
+                    error_strategy: skip
+                    options:
+                        transformers:
+                            property_accessor:
+                                property_path: '[name]'
+                                ignore_missing: true
+                    outputs: [ debug ]
+
+                property_accessor_property:
+                    task: transformer
+                    error_strategy: skip
+                    options:
+                        transformers:
+                            property_accessor:
+                                property_path: name
+                                ignore_missing: true
+                    outputs: [ debug ]
+
+                debug:
+                    task: debug

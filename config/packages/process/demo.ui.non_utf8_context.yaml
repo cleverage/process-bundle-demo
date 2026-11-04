@@ -1,0 +1,19 @@
+clever_age_process:
+    configurations:
+        demo.ui.non_utf8_context:
+            description: >
+                Reproduction (audit v3, "to confirm"): a context value that is not valid UTF-8 (e.g. Latin-1, from a
+                multipart request of the launch form or of the HTTP API) is stored in the JSON column
+                process_execution.context by the UI bundle when the process starts.
+            help: >
+                Ex (HTTP API, synchronous, with an API token of a UI user):
+                curl -H "Authorization: Bearer <token>" -F code=demo.ui.non_utf8_context -F queue=0
+                --form-string "context[name]=$(printf 'Caf\xe9')" http://process-bundle-demo.localhost/http/process/execute
+                The console is not concerned: "-c" parses the values as YAML, which rejects invalid UTF-8.
+                Expected: the process succeeds and its execution is recorded (context sanitized, as the log records).
+            tasks:
+                log:
+                    task: logger
+                    options:
+                        level: info
+                        message: 'Context name: {{ name }}'

@@ -1,0 +1,35 @@
+clever_age_process:
+    configurations:
+        demo.ui.heartbeat_unbuffered_read:
+            description: >
+                Reproduction (audit v3, "to confirm"): the heartbeat of the process execution (UI bundle, every 5 s,
+                before a task) is written with the entity manager of the UI. When it shares its connection with an
+                unbuffered read still fetching rows (MySQL, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY false), it fails.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.ui.heartbeat_unbuffered_read -vv
+                Needs the Doctrine connection read here (default) to be unbuffered (option 1000: false). Each row
+                waits 3 s, so that the heartbeat is written while the read is going on.
+                Expected: no warning "Unable to update the heartbeat of the process execution".
+            tasks:
+                read:
+                    task: doctrine_database_reader
+                    options:
+                        table: book
+                    outputs: [ wait ]
+
+                wait:
+                    task: transformer
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    title:
+                                        code: '[title]'
+                                    waited:
+                                        constant: 3
+                                        transformers:
+                                            sleep: ~
+                    outputs: [ debug ]
+
+                debug:
+                    task: debug

@@ -10,13 +10,16 @@ clever_age_process:
                     ui_launch_mode: form
                     source: Bar
                     target: Foo
-                    entrypoint_type: text
-                    default:
+                    form:
                         context:
-                            -   key: firstname
-                                value: Steven
-                            -   key: lastname
-                                value: King
+                            firstname:
+                                default: Steven
+                                options: { required: true }
+                            lastname:
+                                default: King
+                                options: { required: true }
+                        # Only the declared fields can be set from the UI
+                        allow_extra_context: false
             tasks:
                 entry:
                     task: doctrine_database_updater
