@@ -1,0 +1,29 @@
+clever_age_process:
+    configurations:
+        demo.transformer.convert_value:
+            description: >
+                convert_value transformer with keep_missing (an unknown value is returned as is) and auto_cast (a float or
+                a boolean is looked up as a string), 5.7.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.transformer.convert_value -vv
+                Expected: "Standard", "Express", "unknown" (kept), "Free" (1.0 looked up as "1").
+            tasks:
+                entry:
+                    task: constant_iterable_output
+                    options:
+                        output: ['std', 'exp', 'unknown', 1.0]
+                    outputs: [convert]
+                convert:
+                    task: transformer
+                    options:
+                        transformers:
+                            convert_value:
+                                map:
+                                    std: Standard
+                                    exp: Express
+                                    '1': Free
+                                keep_missing: true
+                                auto_cast: true
+                    outputs: [debug]
+                debug:
+                    task: debug

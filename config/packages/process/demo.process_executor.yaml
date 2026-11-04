@@ -1,0 +1,37 @@
+clever_age_process:
+    configurations:
+        demo.process_executor:
+            description: >
+                ProcessExecutorTask: executes demo.process_executor.child as a sub-process for each item, in the same PHP
+                process, with its own context (the context of the parent is not passed), and outputs its result.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.process_executor -vv
+                Expected: "Hello Ada!", "Hello Grace!".
+            tasks:
+                entry:
+                    task: constant_iterable_output
+                    options:
+                        output: [Ada, Grace]
+                    outputs: [execute]
+                execute:
+                    task: process_executor
+                    options:
+                        process: demo.process_executor.child
+                        context:
+                            greeting: Hello
+                    outputs: [debug]
+                debug:
+                    task: debug
+
+        demo.process_executor.child:
+            description: Sub-process of demo.process_executor, greets its input.
+            public: false
+            entry_point: greet
+            end_point: greet
+            tasks:
+                greet:
+                    task: transformer
+                    options:
+                        transformers:
+                            sprintf:
+                                format: '{{ greeting }} %%s!'

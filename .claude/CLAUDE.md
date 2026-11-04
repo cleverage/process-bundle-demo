@@ -121,6 +121,7 @@ Tasks pass data along `outputs` edges. `TransformerTask` chains named **transfor
 - `Entity/Book`, `Entity/Author` + repositories — sample data model, managed via Doctrine, exposed in EasyAdmin, used by the doctrine-process demos.
 - `DataFixtures/` — loaded by `make doctrine/fixtures`.
 - `Dto/Commune.php` — denormalization target for the REST demo.
+- `Enum/Priority.php` — backed enum of the `EnumType` field of the `demo.ui.launch_form_types` launch form.
 - `Schedule.php` — Symfony Scheduler provider (currently empty; add recurring tasks here).
 - `Kernel.php` — standard Symfony micro-kernel.
 

@@ -1,0 +1,34 @@
+clever_age_process:
+    configurations:
+        demo.stop.signal:
+            description: >
+                Cooperative stop on SIGINT / SIGTERM (5.7): the process is stopped before its next task, its tasks are
+                finalized and it fails with a ProcessStoppedException; a second signal exits right away.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.stop.signal -v, then Ctrl+C during an item (requires
+                the pcntl extension, not installed in the php-fpm image: docker-php-ext-install pcntl as root).
+                Expected: "Signal SIGINT received: the process is stopped before its next task", the current item ends.
+            tasks:
+                entry:
+                    task: constant_iterable_output
+                    options:
+                        output: [1, 2, 3, 4, 5]
+                    outputs: [wait]
+                wait:
+                    task: transformer
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    item:
+                                        code: '[0]'
+                                    waited:
+                                        constant: 3
+                                        transformers:
+                                            sleep: ~
+                    outputs: [log]
+                log:
+                    task: logger
+                    options:
+                        level: warning
+                        message: 'Item done'

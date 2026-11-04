@@ -1,0 +1,57 @@
+clever_age_process:
+    configurations:
+        demo.ui.launch_form_types:
+            description: >
+                Launch form of cleverage/ui-process-bundle 3.5 ("form" UI option): typed context fields (EnumType,
+                DateType, DateIntervalType) converted into process values, constraints of the whole form, and free context
+                pairs (allow_extra_context).
+            help: >
+                Ex (UI): Process > demo.ui.launch_form_types > Launch. The log of the execution gives the context:
+                the case value of the enum ("high"), the date in the DATE_ATOM format, the duration in ISO 8601 ("P7D").
+                A "to" date before the "from" date is rejected by the constraint of the form.
+                Ex (console): bin/console cleverage:process:execute demo.ui.launch_form_types -c priority:high -c from:"'2026-01-01'" -c to:"'2026-01-31'" -c retention:P7D
+            options:
+                ui:
+                    ui_launch_mode: form
+                    form:
+                        context:
+                            priority:
+                                type: Symfony\Component\Form\Extension\Core\Type\EnumType
+                                default: !php/enum App\Enum\Priority::Normal
+                                options:
+                                    class: App\Enum\Priority
+                                    required: true
+                            from:
+                                type: Symfony\Component\Form\Extension\Core\Type\DateType
+                                default: '2026-01-01'
+                                options:
+                                    widget: single_text
+                                    input: string
+                                    required: true
+                            to:
+                                type: Symfony\Component\Form\Extension\Core\Type\DateType
+                                default: '2026-01-31'
+                                options:
+                                    widget: single_text
+                                    input: string
+                                    required: true
+                            retention:
+                                type: Symfony\Component\Form\Extension\Core\Type\DateIntervalType
+                                default: 'P7D'
+                                options:
+                                    input: string
+                                    with_years: false
+                                    with_months: false
+                        # Free key/value pairs for the keys that are not declared (true by default)
+                        allow_extra_context: true
+                        # Constraints of the whole form data
+                        constraints:
+                            - Expression:
+                                  expression: 'value["context"]["to"] >= value["context"]["from"]'
+                                  message: 'The "to" date must not be before the "from" date.'
+            tasks:
+                log:
+                    task: logger
+                    options:
+                        level: info
+                        message: 'Priority {{ priority }} from {{ from }} to {{ to }}, retention {{ retention }}'
