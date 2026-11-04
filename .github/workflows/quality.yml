@@ -62,3 +62,26 @@ jobs:
         uses: ramsey/composer-install@v4
       - name: Rector
         run: vendor/bin/rector --no-progress-bar --dry-run
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+          tools: composer:v2
+      - name: Install Composer dependencies (locked)
+        uses: ramsey/composer-install@v4
+      - name: Lint the container
+        run: bin/console lint:container
+      - name: Lint the YAML files
+        run: bin/console lint:yaml config --parse-tags
+      # The warmers of the bundles check the processes (e.g. the launch forms of the UI bundle). cache:warmup rather than
+      # cache:clear, which fails in prod with cleverage/ui-process-bundle 3.5.0 (cleverage/ui-process-bundle#262)
+      - name: Warm up the prod cache
+        run: bin/console cache:warmup --env=prod
