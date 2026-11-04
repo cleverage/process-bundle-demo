@@ -47,11 +47,11 @@ assets/install: #[Symfony] Install assets
 	$(DOCKER_RUN_PHP) "bin/console assets:install"
 
 xdebug/on: #[Docker] Enable xdebug
-	$(DOCKER_COMPOSE) stop php
+	$(DOCKER_COMPOSE) stop php-fpm
 	XDEBUG_MODE=debug,develop $(DOCKER_COMPOSE) up --remove-orphans --detach
 
 xdebug/off: #[Docker] Disable xdebug
-	$(DOCKER_COMPOSE) stop php
+	$(DOCKER_COMPOSE) stop php-fpm
 	XDEBUG_MODE=off $(DOCKER_COMPOSE) up --remove-orphans --detach
 
 quality: phpstan php-cs-fixer rector #[Quality] Run all quality checks
