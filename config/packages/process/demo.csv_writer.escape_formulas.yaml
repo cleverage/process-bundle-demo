@@ -1,0 +1,28 @@
+clever_age_process:
+    configurations:
+        demo.csv_writer.escape_formulas:
+            description: >
+                CsvWriterTask with escape_formulas (5.7): the values starting with =, -, +, @ (or a tabulation, a carriage
+                return, a line feed) are prefixed with a single quote, so that a spreadsheet does not run them as formulas.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.csv_writer.escape_formulas -vv
+                Expected in var/data/demo_escape_formulas.csv: '=HYPERLINK(...) and '-42 for the "escaped" lines.
+            tasks:
+                entry:
+                    task: constant_iterable_output
+                    options:
+                        output:
+                            - { name: 'Ada', comment: '=HYPERLINK("https://example.com","click")', balance: '-42' }
+                            - { name: 'Grace', comment: 'Regular text', balance: '12' }
+                    outputs: [write]
+                write:
+                    task: csv_writer
+                    options:
+                        file_path: '%kernel.project_dir%/var/data/demo_escape_formulas.csv'
+                        escape_formulas: true
+                    outputs: [read]
+                read:
+                    task: input_file_reader
+                    outputs: [debug]
+                debug:
+                    task: debug

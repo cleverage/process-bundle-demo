@@ -1,0 +1,29 @@
+clever_age_process:
+    configurations:
+        demo.transformer.slugify_strip_tags:
+            description: >
+                slugify transformer and its strip_tags option (5.7): the HTML tags are stripped by default
+                ("<b>Hello</b> world" gives "hello_world"); with strip_tags false, they are slugified as text.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.transformer.slugify_strip_tags -vv
+            tasks:
+                entry:
+                    task: constant_output
+                    options:
+                        output: '<b>Hello</b> world'
+                    outputs: [default, keep_tags]
+                default:
+                    task: transformer
+                    options:
+                        transformers:
+                            slugify: ~
+                    outputs: [debug]
+                keep_tags:
+                    task: transformer
+                    options:
+                        transformers:
+                            slugify:
+                                strip_tags: false
+                    outputs: [debug]
+                debug:
+                    task: debug
