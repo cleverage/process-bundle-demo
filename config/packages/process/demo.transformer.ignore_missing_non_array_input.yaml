@@ -2,11 +2,13 @@ clever_age_process:
     configurations:
         demo.transformer.ignore_missing_non_array_input:
             description: >
-                Reproduction (audit v3, "to confirm"): does "ignore_missing" of the mapping and property_accessor
-                transformers cover an input that is null or a scalar, and not an array or an object?
+                "ignore_missing" of the mapping and property_accessor transformers with an input that is neither an
+                array nor an object (null, a scalar): it has no readable property, so its properties are missing
+                (cleverage/process-bundle#430, 5.8; a TypeError was thrown before).
             help: >
                 Ex: bin/console cleverage:process:execute demo.transformer.ignore_missing_non_array_input -vv
-                Expected: each input gives null values (missing property ignored), the array input gives "x".
+                Expected: the null and scalar inputs give an empty mapping and a null property, the array input gives
+                "x" with the index notation; no error.
             tasks:
                 inputs:
                     task: constant_iterable_output
