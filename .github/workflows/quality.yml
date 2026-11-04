@@ -81,7 +81,10 @@ jobs:
         run: bin/console lint:container
       - name: Lint the YAML files
         run: bin/console lint:yaml config --parse-tags
-      # The warmers of the bundles check the processes (e.g. the launch forms of the UI bundle). cache:warmup rather than
-      # cache:clear, which fails in prod with cleverage/ui-process-bundle 3.5.0 (cleverage/ui-process-bundle#262)
+      # The warmers of the bundles check the processes (e.g. the launch forms of the UI bundle). With
+      # cleverage/ui-process-bundle 3.5, warming up a cold prod cache fails (cleverage/ui-process-bundle#262): the
+      # container is built first without the optional warmers, then the second run executes all of them
+      - name: Build the prod container
+        run: bin/console cache:warmup --env=prod --no-optional-warmers
       - name: Warm up the prod cache
         run: bin/console cache:warmup --env=prod
