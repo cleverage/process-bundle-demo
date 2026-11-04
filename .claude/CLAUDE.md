@@ -66,7 +66,7 @@ Each config's `help:` line shows a concrete example. `-c key:"'value'"` injects 
 To find how a task behaves or what options it accepts, open its class under the relevant `vendor/cleverage/*/src/Task/` and its matching page under that bundle's `docs/reference/`.
 
 **Working on a bundle (PR, release): use the demo's `vendor/cleverage/<bundle>/` clone.** These are full git clones (Composer sets `origin` to HTTPS; pushing needs an SSH push URL, `git remote set-url --push origin git@github.com:cleverage/<bundle>.git`), each with its own `.docker/`, `Makefile` and quality/test stack, so branch, commit, push and run `make quality` / `make tests` from there — do **not** use or re-create separate clones elsewhere under `~/workspace/cleverage/`. Changes there are picked up live by the demo's `demo.*` processes. Gotchas:
-- `composer install`/`update` in the demo checks out the locked ref (detached HEAD) and may ask to discard local changes: finish or stash bundle work first, then `git switch` back to your branch afterwards.
+- `composer install`/`update` in the demo checks out the ref of the resolved version (detached HEAD; `composer.lock` is git-ignored, the local one is used by `composer install`) and may ask to discard local changes: finish or stash bundle work first, then `git switch` back to your branch afterwards.
 - A bundle's own `vendor/` (from `make tests` etc.) lives inside the demo's `vendor/cleverage/<bundle>/vendor/`; it is git-ignored by the bundle and harmless for the demo.
 - For parallel work on several branches of one bundle, use `git worktree add` from that clone.
 
