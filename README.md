@@ -18,5 +18,5 @@ If you think you found a bug or you have a feature idea to propose, feel free to
 
 ## License
 
-This bundle is under the MIT license.
+This project is under the MIT license.
 For the whole copyright, see the [LICENSE](LICENSE) file distributed with this source code.

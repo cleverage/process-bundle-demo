@@ -6,11 +6,16 @@ First of all, **thank you** for contributing, **you are awesome**!
 Here are a few rules to follow in order to ease code reviews, and discussions before
 maintainers accept and merge your work.
 
+This project demonstrates the features of `cleverage/process-bundle` and of its bridge bundles: a feature (or the
+reproduction of a bug, a regression check) is demonstrated by a process configuration, named with a `demo.` prefix,
+in its own file under `config/packages/process/` (one file per process, or per family of processes sharing a prefix).
+Give it a `description` and a `help` with the command to run and the expected result. PHP code under `src/` is only
+the glue the processes need (entities, fixtures, DTOs...).
+
+A bug or a feature of a bundle is fixed or developed in the bundle itself (its clone under `vendor/cleverage/`), not
+in this project.
+
 You MUST run the quality & test suites.
-
-You SHOULD write (or update) unit tests.
-
-You SHOULD write documentation.
 
 Please, write [commit messages that make sense](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html),
 and [rebase your branch](https://git-scm.com/book/en/v2/Git-Branching-Rebasing) before submitting your Pull Request.
@@ -23,14 +28,8 @@ Thank you!
 
 ## Running the quality & test suites
 
-Tests suite uses Docker environments in order to be idempotent to OS's. More than this
-PHP version is written inside the Dockerfile; this assures to test the bundle with
-the same resources. No need to have PHP installed.
-
-You only need Docker set it up.
-
-To allow testing environments more smooth we implemented **Makefile**.
-You have two commands available:
+The project runs in Docker (`.docker/compose.yaml`): no need to have PHP installed. The **Makefile** runs the commands
+in the containers:
 
 ```bash
 make quality
@@ -40,13 +39,4 @@ make quality
 make tests
 ```
 
-## Deprecations notices
-
-When a feature should be deprecated, or when you have a breaking change for a future version, please :
-* [Fill an issue](https://github.com/cleverage/process-bundle-demo/issues/new)
-* Add TODO comments with the following format: `@TODO deprecated v1.0`
-* Trigger a deprecation error: `@trigger_error('This feature will be deprecated in v1.0', E_USER_DEPRECATED);`
-
-You can check which deprecation notice is triggered in tests
-* `make bash`
-* `SYMFONY_DEPRECATIONS_HELPER=0 ./vendor/bin/phpunit`
+`make tests` checks that the container compiles and that the configuration of every demo process is valid.

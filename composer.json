@@ -8,6 +8,7 @@
         }
     },
     "require": {
+        "php": "^8.2",
         "ext-intl": "*",
         "cleverage/archive-process-bundle": "^2.5",
         "cleverage/cache-process-bundle": "^2.4",
