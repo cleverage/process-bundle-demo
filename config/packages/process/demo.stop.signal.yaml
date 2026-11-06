@@ -21,7 +21,7 @@ clever_age_process:
                             mapping:
                                 mapping:
                                     item:
-                                        code: '[0]'
+                                        code: '.'
                                     waited:
                                         constant: 3
                                         transformers:
