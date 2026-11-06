@@ -103,3 +103,14 @@ jobs:
       #  uses: codecov/codecov-action@v4
       #  with:
       #    files: build/logs/clover.xml
+
+  # Single check to require in the branch protection of main: its name does not depend on the matrix
+  tests-passed:
+    name: Tests passed
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check the result of the jobs
+        run: test "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}" = false
