@@ -1,0 +1,31 @@
+clever_age_process:
+    configurations:
+        demo.ui.log_context_limit:
+            description: >
+                Logs an array of 5000 items as context: the arrays of the context of a log record stored by the UI are
+                limited as in the log file (Monolog NormalizerFormatter): 1000 items, 9 levels deep (ui-process-bundle
+                3.6, #271; an unbounded context, e.g. the output of an aggregator, was stored whole and could exceed the
+                maximum packet size of the database, making the insertion of the log records fail).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.ui.log_context_limit
+                Expected: the process succeeds and its "Big context" log record (see the logs of the execution in the UI,
+                or the log_record table) holds 1000 items of the array and a "..." entry "Over 1000 items (5000 total), aborting normalization".
+            tasks:
+                entry:
+                    task: constant_output
+                    options:
+                        output: 5000
+                    outputs: [range]
+                range:
+                    task: transformer
+                    options:
+                        transformers:
+                            callback:
+                                callback: range
+                                left_parameters: [1]
+                    outputs: [log]
+                log:
+                    task: logger
+                    options:
+                        level: info
+                        message: 'Big context'

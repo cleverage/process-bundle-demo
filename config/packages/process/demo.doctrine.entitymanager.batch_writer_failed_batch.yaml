@@ -1,0 +1,58 @@
+clever_age_process:
+    configurations:
+        demo.doctrine.entitymanager.batch_writer_failed_batch:
+            description: >
+                doctrine_batch_writer with a batch whose writing fails (doctrine-process-bundle 3.4.1, #87): the whole
+                batch is lost (removed from the buffer and detached), the next batches are written as usual (the failed
+                batch stayed in the buffer before, so every following batch failed again). Here, with batch_count 2 and
+                error_strategy skip, the author "Fail" has a firstname of 304 characters (255 max): the batch [Demo1, Fail] is
+                lost, the batches [Demo3, Demo4] and [Demo5, Demo6] are written. The authors written are read back,
+                printed, then removed.
+            help: >
+                Ex: bin/console cleverage:process:execute demo.doctrine.entitymanager.batch_writer_failed_batch
+                Expected: an error logged for the failed batch, then the firstnames Demo3, Demo4, Demo5 and Demo6
+                (not Demo1, lost with the failed batch). No author is left in the database.
+            tasks:
+                entry:
+                    task: constant_iterable_output
+                    options:
+                        output:
+                            - { firstname: Demo1, lastname: BatchFailed }
+                            - { firstname: 'Failxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', lastname: BatchFailed }
+                            - { firstname: Demo3, lastname: BatchFailed }
+                            - { firstname: Demo4, lastname: BatchFailed }
+                            - { firstname: Demo5, lastname: BatchFailed }
+                            - { firstname: Demo6, lastname: BatchFailed }
+                    outputs: [denormalizer]
+                denormalizer:
+                    task: denormalizer
+                    options:
+                        class: App\Entity\Author
+                    outputs: [batch_write]
+                batch_write:
+                    task: doctrine_batch_writer
+                    error_strategy: skip
+                    options:
+                        batch_count: 2
+                    outputs: [aggregate_written]
+                aggregate_written:
+                    task: aggregate_iterable
+                    outputs: [fetch]
+                fetch:
+                    task: doctrine_reader
+                    options:
+                        class_name: App\Entity\Author
+                        criteria:
+                            lastname: BatchFailed
+                    outputs: [names, remove]
+                names:
+                    task: transformer
+                    options:
+                        transformers:
+                            property_accessor:
+                                property_path: firstname
+                    outputs: [debug]
+                debug:
+                    task: debug
+                remove:
+                    task: doctrine_remover

@@ -1,0 +1,30 @@
+clever_age_process:
+    configurations:
+        demo.transformer.xpath_evaluator_false:
+            description: >
+                xpath_evaluator with boolean expressions (5.9, #436): an expression whose value is false (boolean(),
+                not(), a false comparison) returns false, instead of throwing "Invalid xpath query ...: unknown error".
+                Only an expression reporting libxml errors is invalid. The input is var/data/xml_stream_reader.xml (4
+                products with a sku, the nested one included).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.transformer.xpath_evaluator_false -vv
+                Expected: {has_products: true, has_more_than_99: false, has_no_product: false, count: 4.0}.
+            tasks:
+                read:
+                    task: xml_reader
+                    options:
+                        file_path: '%kernel.project_dir%/var/data/xml_stream_reader.xml'
+                    outputs: [evaluate]
+                evaluate:
+                    task: transformer
+                    options:
+                        transformers:
+                            xpath_evaluator:
+                                query:
+                                    has_products: 'boolean(//product)'
+                                    has_more_than_99: 'count(//product) > 99'
+                                    has_no_product: 'not(//product)'
+                                    count: 'count(//product[@sku])'
+                    outputs: [debug]
+                debug:
+                    task: debug
