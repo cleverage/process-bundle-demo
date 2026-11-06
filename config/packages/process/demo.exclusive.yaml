@@ -1,0 +1,37 @@
+clever_age_process:
+    configurations:
+        demo.exclusive:
+            description: >
+                Exclusive process (5.9, #444): while an execution of it is running, another execution fails with a
+                ProcessAlreadyRunningException and is not executed, from the same PHP process or from another one sharing
+                the lock store (cron entries, user interface, schedulers, Messenger workers). Requires symfony/lock
+                (lock.factory service, store configured in config/packages/lock.yaml: flock, only valid on one host).
+                With the user interface, the schedules are locked the same way (ui-process-bundle 3.6, #266, with
+                symfony/lock installed): with several scheduler_cron workers, only the one holding the lock sends the
+                messages.
+            help: >
+                Ex, two executions at the same time (the process waits for 3 seconds):
+                bin/console cleverage:process:execute demo.exclusive -vv & bin/console cleverage:process:execute demo.exclusive -vv; wait
+                Expected: one execution logs "Exclusive work done" and succeeds, the other one fails with "Process
+                demo.exclusive is exclusive and is already running: it is not executed." (lock
+                "cleverage_process.exclusive.demo.exclusive").
+                Also (5.9): "--input=x" given to this process, which has no entry_point, is reported on the error output
+                of the command (#461), and a mistyped code ("demo.exclusiv") gets a "Did you mean" suggestion (#463).
+            exclusive: true
+            tasks:
+                entry:
+                    task: constant_output
+                    options:
+                        output: 3
+                    outputs: [wait]
+                wait:
+                    task: transformer
+                    options:
+                        transformers:
+                            sleep: ~ # generic transformer of config/packages/clever_age_process.yaml
+                    outputs: [log]
+                log:
+                    task: logger
+                    options:
+                        level: warning
+                        message: 'Exclusive work done'

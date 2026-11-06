@@ -1,0 +1,51 @@
+clever_age_process:
+    configurations:
+        demo.transformer.sprintf_dynamic_width:
+            description: >
+                sprintf with a width or a precision given as an argument (5.9, #449): "%*d", "%.*f" and "%1$*2$d" are
+                accepted by the validation of the "format" option (rejected since 5.7). The input is the list of the
+                arguments of vsprintf().
+            help: >
+                Ex: bin/console cleverage:process:execute demo.transformer.sprintf_dynamic_width -vv
+                Expected: "[   42]" (width 5 given as argument), "[3.142]" (precision 3), "[   42]" (positional).
+            tasks:
+                entry:
+                    task: constant_output
+                    options:
+                        output: [5, 42]
+                    outputs: [width, precision, positional]
+                width:
+                    task: transformer
+                    options:
+                        transformers:
+                            sprintf:
+                                format: '[%*d]'
+                    outputs: [debug]
+                precision:
+                    task: transformer
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    0:
+                                        constant: 3
+                                    1:
+                                        constant: 3.14159
+                            sprintf:
+                                format: '[%.*f]'
+                    outputs: [debug]
+                positional:
+                    task: transformer
+                    options:
+                        transformers:
+                            mapping:
+                                mapping:
+                                    0:
+                                        code: '[1]'
+                                    1:
+                                        code: '[0]'
+                            sprintf:
+                                format: '[%1$*2$d]'
+                    outputs: [debug]
+                debug:
+                    task: debug

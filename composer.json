@@ -28,6 +28,7 @@
         "symfony/flex": "^v2.3",
         "symfony/framework-bundle": "^6.4 || ^7.4 || ^8",
         "symfony/http-kernel": "^6.4 || ^7.4 || ^8",
+        "symfony/lock": "^6.4 || ^7.4 || ^8",
         "symfony/monolog-bundle": "^3.11 || ^4",
         "symfony/notifier": "^6.4 || ^7.4 || ^8",
         "symfony/password-hasher": "^6.4 || ^7.4 || ^8",

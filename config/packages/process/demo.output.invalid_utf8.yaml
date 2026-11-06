@@ -1,0 +1,32 @@
+clever_age_process:
+    configurations:
+        demo.output.invalid_utf8:
+            description: >
+                Process whose output (end_point) is an array holding a string with an invalid UTF-8 sequence ("caf" followed by the
+                single byte 0xE9, Latin-1 "é"), written with the "-o <file> -t json-stream" options of the command (5.9,
+                #455): the invalid sequence is replaced by U+FFFD, as on STDOUT (a JsonException was thrown before, also
+                by the JSON buffer of process_launcher).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.output.invalid_utf8 -o var/data/invalid_utf8.json -t json-stream
+                then cat var/data/invalid_utf8.json.
+                Expected: the file contains {"value":"caf\ufffd"} (a JSON line), the command succeeds (exit code 0).
+            end_point: wrap
+            tasks:
+                entry:
+                    task: constant_output
+                    options:
+                        output: '636166e9' # hexadecimal of the bytes "caf" + 0xE9
+                    outputs: [decode]
+                decode:
+                    task: transformer
+                    options:
+                        transformers:
+                            callback:
+                                callback: hex2bin
+                    outputs: [wrap]
+                wrap: # the json-stream format requires an array
+                    task: transformer
+                    options:
+                        transformers:
+                            wrapper:
+                                wrapper_key: value

@@ -1,0 +1,55 @@
+clever_age_process:
+    generic_transformers:
+        demo-shout: # code with a dash, kept as is since 5.7 (#412)
+            contextual_options:
+                demo-suffix: # contextual option with a dash, kept as is since 5.9 (#438)
+                    default: '!'
+            transformers:
+                callback:
+                    callback: mb_strtoupper
+                sprintf:
+                    format: '%%s{{ demo-suffix }}'
+        demo-shout-twice: # references a generic transformer with a dash: no deprecation of its former name (#438)
+            transformers:
+                demo-shout:
+                    demo-suffix: '!'
+                sprintf:
+                    format: '%%1$s %%1$s'
+    configurations:
+        demo.generic_transformer.dashed_codes:
+            description: >
+                Generic transformers whose code, transformers and contextual options contain a dash (5.9, #438): the
+                codes keep their dashes, as the codes of the processes, tasks and generic transformers since 5.7. A
+                generic transformer referencing a generic transformer with a dash no longer triggers the deprecation of
+                its former name (underscores).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.generic_transformer.dashed_codes -vv
+                Expected: "HELLO!" (with the default suffix), "HELLO?" (with the "?" suffix), "HELLO! HELLO!", and no
+                deprecation about a former name with underscores.
+            tasks:
+                entry:
+                    task: constant_output
+                    options:
+                        output: hello
+                    outputs: [default_suffix, custom_suffix, twice]
+                default_suffix:
+                    task: transformer
+                    options:
+                        transformers:
+                            demo-shout: ~
+                    outputs: [debug]
+                custom_suffix:
+                    task: transformer
+                    options:
+                        transformers:
+                            demo-shout:
+                                demo-suffix: '?'
+                    outputs: [debug]
+                twice:
+                    task: transformer
+                    options:
+                        transformers:
+                            demo-shout-twice: ~
+                    outputs: [debug]
+                debug:
+                    task: debug

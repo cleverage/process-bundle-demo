@@ -1,0 +1,36 @@
+clever_age_process:
+    configurations:
+        demo.date.date_parser_trailing_data:
+            description: >
+                date_parser with a "+" at the end of the format ("!Y-m-d+"): the data following the date are allowed
+                (5.9, #447; the "Trailing data" warning rejected the value since 5.7). Without the "+", the same value
+                is still rejected (the "without_plus" task skips its error, logged).
+            help: >
+                Ex: bin/console cleverage:process:execute demo.date.date_parser_trailing_data -vv
+                Expected: "2026-11-06 00:00:00" for "2026-11-06 ignored text" with the format "!Y-m-d+", and an error
+                logged by "without_plus" (Transformation 'date_parser' have failed: Given value cannot be parsed into a date).
+            tasks:
+                entry:
+                    task: constant_output
+                    options:
+                        output: '2026-11-06 ignored text'
+                    outputs: [with_plus, without_plus]
+                with_plus:
+                    task: transformer
+                    options:
+                        transformers:
+                            date_parser:
+                                format: '!Y-m-d+'
+                            date_format:
+                                format: 'Y-m-d H:i:s'
+                    outputs: [debug]
+                without_plus:
+                    task: transformer
+                    error_strategy: skip
+                    options:
+                        transformers:
+                            date_parser:
+                                format: '!Y-m-d'
+                    outputs: [debug]
+                debug:
+                    task: debug
