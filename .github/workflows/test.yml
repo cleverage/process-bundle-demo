@@ -81,9 +81,9 @@ jobs:
             variant: symfony/symfony:"8.*"
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Install PHP with extensions
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
         with:
           php-version: ${{ matrix.php-version }}
           coverage: pcov
@@ -94,7 +94,7 @@ jobs:
         if: matrix.variant != 'normal' && !startsWith(matrix.variant, 'symfony/symfony')
         run: composer require ${{ matrix.variant }} --no-update
       - name: Install Composer dependencies (${{ matrix.dependencies }})
-        uses: ramsey/composer-install@v4
+        uses: ramsey/composer-install@26d8a556604053a9612623447203a691f406fbe6 # v4
         with:
           dependency-versions: ${{ matrix.dependencies }}
       - name: Run Tests with coverage
