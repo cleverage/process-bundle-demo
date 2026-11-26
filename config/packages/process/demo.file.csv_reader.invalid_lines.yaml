@@ -1,0 +1,24 @@
+clever_age_process:
+    configurations:
+        demo.file.csv_reader.invalid_lines:
+            description: >
+                Reads a CSV file given as input and writes its invalid lines (wrong number of columns) to a rejects
+                file, with their line number and values (error output of the CSV readers, process-bundle 6.0)
+            help: >
+                Ex: bin/console cleverage:process:execute demo.file.csv_reader.invalid_lines
+                --input=var/data/csv_reader_invalid_lines.txt
+                (rejects written to var/csv_reader_invalid_lines_rejects.csv)
+            entry_point: read
+            tasks:
+                read:
+                    task: input_csv_reader
+                    outputs: [ dump ]
+                    error_strategy: skip
+                    # ['csv_file' => <path>, 'csv_line' => <line number>, 'csv_values' => <values read>]
+                    error_outputs: [ write_rejects ]
+                dump:
+                    task: debug
+                write_rejects:
+                    task: csv_writer # csv_file;csv_line;csv_values, the values joined by "|"
+                    options:
+                        file_path: '%kernel.project_dir%/var/csv_reader_invalid_lines_rejects.csv'
