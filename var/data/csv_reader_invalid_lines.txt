@@ -1,0 +1,5 @@
+title;author_firstname;author_lastname
+It;Stephen;King
+Carrie;Stephen
+The Shining;Stephen;King
+Dracula;Bram;Stoker;1897

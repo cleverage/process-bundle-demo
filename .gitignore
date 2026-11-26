@@ -17,6 +17,7 @@
 !/var/data/json_stream_reader.json
 !/var/data/sample.csv
 !/var/data/sample.txt
+!/var/data/csv_reader_invalid_lines.txt
 !/var/data/xml_stream_reader.xml
 /vendor/
 ###< symfony/framework-bundle ###
